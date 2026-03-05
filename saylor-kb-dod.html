@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Michael Saylor KB — Definition of Done</title>
+<style>
+body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #222; }
+h1 { border-bottom: 2px solid #333; padding-bottom: 8px; }
+h2 { margin-top: 2em; color: #444; }
+h3 { color: #555; }
+table { border-collapse: collapse; width: 100%; margin: 1em 0; }
+th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+th { background: #f5f5f5; }
+ul, ol { padding-left: 1.5em; }
+code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; }
+pre { background: #f0f0f0; padding: 16px; border-radius: 6px; overflow-x: auto; }
+strong { color: #111; }
+hr { border: none; border-top: 1px solid #ddd; margin: 2em 0; }
+</style></head><body><h1>Michael Saylor Knowledge Base — Definition of Done</h1>
+<p><em>v1.0 — 2026-03-03</em></p>
+<hr />
+<h2>Context</h2>
+<p>Michael Saylor has done thousands of hours of public speaking — podcasts, news interviews, conference keynotes, corporate earnings calls, and Bitcoin-focused presentations. He's one of the most quotable, framework-heavy thinkers in the Bitcoin space, but his knowledge is scattered across hundreds of YouTube videos, podcast feeds, and corporate archives. You can't search it, cross-reference it, or ask it a question.</p>
+<p>What makes Saylor unusual isn't just the volume — it's the discipline. When asked about Dogecoin, he stays in his lane. When markets crash, he's cheerful and constructive. He's built a library of mental models and repeatable frameworks for thinking about money, energy, and civilization — and he deploys them with laser focus on Bitcoin. That signal-to-noise ratio is what makes this corpus worth building into a knowledge base.</p>
+<p>I want to scrape every Michael Saylor interview and public appearance from the internet and transform it into a semantic search knowledge base — fully transcribed, speaker-identified, categorized, and queryable by natural language.</p>
+<h2>The Outcome</h2>
+<p>I ask "How would Saylor respond to someone who says Bitcoin is too volatile to be a treasury asset?" — and I get his actual answer, synthesized from dozens of appearances where he addressed that exact objection, with his signature analogies intact. Cheerful, constructive, laser-focused on Bitcoin. Sourced, dated, and weighted toward his most recent thinking.</p>
+<p>It feels like having Saylor in the room — his discipline, his mental models, his refusal to get pulled off-topic — except he's searchable, organized, and you can cross-reference what he said on Lex Fridman against what he told the SEC.</p>
+<h2>The Experience</h2>
+<p>I'm preparing for a debate about Bitcoin as a corporate treasury strategy. I ask the KB: "What's Saylor's steel-man case for why Bitcoin beats bonds, gold, and real estate as a store of value?" Within a minute I get his full framework — the thermodynamic argument, the digital energy analogy, the comparison to Manhattan real estate — sourced from 8 different appearances across 3 years, with the most recent arguments weighted highest. Each claim links back to the specific interview and timestamp.</p>
+<p>A teammate asks: "What analogies does Saylor use to explain Bitcoin to normies?" They get a ranked list of his most-used analogies — digital gold, cyber Manhattan, melting ice cube, mosquito net over your wealth — with the exact quotes and which interviews he deployed them in.</p>
+<h2>Done When</h2>
+<h3>1. Every public appearance transcribed &amp; speaker-labeled</h3>
+<ul>
+<li>All discoverable Saylor interviews, podcasts, conference talks, and corporate presentations scraped and transcribed</li>
+<li>Every speaker identified by name (Saylor, interviewer, panelists, analysts)</li>
+<li>Saylor always tagged as primary speaker</li>
+<li><strong>Test:</strong> Pick any 3 random files → each has a clean, speaker-labeled transcript with no unresolved speaker tags</li>
+</ul>
+<h3>2. Categorized by appearance type</h3>
+<ul>
+<li>Every transcript tagged by format: <code>podcast</code>, <code>news</code>, <code>conference</code>, <code>corporate</code></li>
+<li>Can filter by category or search across all</li>
+<li>Podcasts tagged with show name (Lex Fridman, What Bitcoin Did, etc.)</li>
+<li>Corporate presentations tagged by type (earnings call, investor day, Bitcoin strategy update)</li>
+<li><strong>Test:</strong> "Show me only his conference keynotes from 2024-2025" → returns only conference content, cleanly tagged</li>
+</ul>
+<h3>3. All participants identified &amp; tracked</h3>
+<ul>
+<li>Every interviewer, host, panelist, and analyst identified by name across the entire corpus</li>
+<li>Can query by person: "What did Lex Fridman ask Saylor about?" or "Which CNBC anchors have interviewed him?"</li>
+<li>Tracks who challenged him hardest, who gave him the most room to monologue, recurring interviewers</li>
+<li><strong>Test:</strong> "Who has interviewed Saylor more than 3 times?" → returns names with counts and dates</li>
+</ul>
+<h3>4. Knowledge distilled into structured frameworks</h3>
+<ul>
+<li><strong>Thinking frameworks &amp; mental models</strong> — how he thinks (thermodynamic store of value, digital transformation of X, 100-year time horizon, "cheerful &amp; constructive" as a deliberate operating stance, staying in your lane, laser focus as competitive advantage)</li>
+<li><strong>Playbooks &amp; SOPs</strong> — his repeatable processes (how to pitch Bitcoin to a board, how to structure convertible note offerings, how to respond to regulatory FUD)</li>
+<li><strong>Systems &amp; leadership</strong> — his organizational principles (MicroStrategy's Bitcoin strategy execution, corporate governance around BTC treasury)</li>
+<li><strong>Philosophy &amp; money frameworks</strong> — his foundational beliefs (why fiat fails, what money is, Austrian economics meets digital age, energy-money equivalence)</li>
+<li>Each framework sourced to specific appearances with quotes</li>
+<li><strong>Test:</strong> "What's Saylor's framework for evaluating whether an asset is money?" → returns his full hierarchy (scarcity, durability, portability, divisibility, programmability) with sources</li>
+</ul>
+<h3>5. Timestamped &amp; recency-weighted</h3>
+<ul>
+<li>Every piece of content has a date</li>
+<li>Queries weighted by recency by default (his 2025-2026 thinking on ETFs &gt; his 2020 thinking)</li>
+<li>Can also search for timeless frameworks without recency bias</li>
+<li><strong>Test:</strong> "What does Saylor say about Bitcoin ETFs?" → 2025-2026 weighted higher. "What is digital energy?" → best explanation regardless of date</li>
+</ul>
+<h3>6. Saylor-voice query responses with analogies</h3>
+<ul>
+<li>Can ask "How would Saylor respond to X?" and get an answer synthesized in his voice — using his actual analogies, not generic summaries</li>
+<li>Analogies catalogued and tagged (which ones he uses for which arguments)</li>
+<li>Cross-references multiple appearances to build the strongest version of his argument</li>
+<li><strong>Test:</strong> "How would Saylor convince a traditional CFO to add Bitcoin to the balance sheet?" → response uses his actual analogies (melting ice cube, stranded on an island with $100M), cites specific interviews, reads like Saylor wrote it</li>
+</ul>
+<h3>7. Semantic search with citations</h3>
+<ul>
+<li>All content embedded and queryable via natural language</li>
+<li>Every answer cites specific interviews with dates and speaker context</li>
+<li>Can ask esoteric cross-cutting queries ("How has Saylor's view on altcoins evolved from 2020 to 2025?")</li>
+<li><strong>Test:</strong> Ask 5 real questions → 4/5 return useful, sourced answers with specific interview citations</li>
+</ul>
+<h3>8. Automated ingestion pipeline</h3>
+<ul>
+<li>New Saylor appearances detected and ingested automatically (YouTube channels, podcast feeds, MicroStrategy IR page)</li>
+<li>Full pipeline: discovery → download → transcription → speaker labeling → categorization → framework extraction → embedding</li>
+<li>Pipeline failures alert rather than silently skip</li>
+<li><strong>Test:</strong> Saylor does a new podcast interview. Within 48 hours it's transcribed, labeled, categorized, and searchable — no manual intervention</li>
+</ul>
+<h3>Stretch Goal: Reusable across public figures</h3>
+<ul>
+<li>The entire pipeline can be re-pointed at a different public figure (Balaji, Naval, Buffett) without rebuilding from scratch</li>
+<li>Configure: source channels/feeds, speaker name, category taxonomy — pipeline handles the rest</li>
+<li><strong>Test:</strong> Re-point the pipeline at Mike Israetel (bodybuilding / Renaissance Periodization). Retool the category taxonomy, configure source channels, and deploy. The system produces a working, queryable KB for a completely different person in a completely different field — without rebuilding from scratch</li>
+</ul>
+<h2>Feedback Form</h2>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>1 (Poor)</th>
+<th>3 (Acceptable)</th>
+<th>5 (Excellent)</th>
+<th>Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Transcription &amp; speakers</td>
+<td>Gaps, errors, unresolved tags</td>
+<td>All done, some noise</td>
+<td>Clean, every speaker named</td>
+<td>/5</td>
+</tr>
+<tr>
+<td>2. Categorization</td>
+<td>Missing tags</td>
+<td>Tagged, basic filtering</td>
+<td>Filtered by type + show name</td>
+<td>/5</td>
+</tr>
+<tr>
+<td>3. Participant tracking</td>
+<td>Names only</td>
+<td>Names + counts</td>
+<td>Full query: who, how often, what about</td>
+<td>/5</td>
+</tr>
+<tr>
+<td>4. Structured frameworks</td>
+<td>Mixed together</td>
+<td>Separated into categories</td>
+<td>Sourced, cross-referenced, mental models tagged</td>
+<td>/5</td>
+</tr>
+<tr>
+<td>5. Timestamps &amp; recency</td>
+<td>No dates</td>
+<td>Dated, no weighting</td>
+<td>Recency-weighted with timeless override</td>
+<td>/5</td>
+</tr>
+<tr>
+<td>6. Saylor-voice responses</td>
+<td>Generic summaries</td>
+<td>Uses some analogies</td>
+<td>Reads like Saylor wrote it, analogies catalogued</td>
+<td>/5</td>
+</tr>
+<tr>
+<td>7. Semantic search</td>
+<td>Keyword only</td>
+<td>Vector, decent answers</td>
+<td>Natural language, sourced citations</td>
+<td>/5</td>
+</tr>
+<tr>
+<td>8. Automated pipeline</td>
+<td>Manual, every step</td>
+<td>Scripted, some manual</td>
+<td>Fully auto, failure alerts</td>
+<td>/5</td>
+</tr>
+<tr>
+<td>Stretch: Reusable</td>
+<td>Hardcoded to Saylor</td>
+<td>Config swap, some rework</td>
+<td>Israetel KB working, no rebuild</td>
+<td>/5</td>
+</tr>
+</tbody>
+</table>
+<h2>Not Done Until Brad Says So</h2>
+<p>Brad tests with 5 real questions he actually cares about. 4/5 return useful, sourced, Saylor-voice answers — it ships.</p>
+<h2>Not In Scope</h2>
+<ul>
+<li>Private conversations or leaked content</li>
+<li>AI-generated "what Saylor would say" beyond what's in the actual corpus</li>
+<li>Web UI or app (future phase)</li>
+<li>Real-time monitoring of live appearances</li>
+</ul>
+<h2>Changelog</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.2</td>
+<td>2026-03-03</td>
+<td>Finalized per DoD SOP: added Feedback Form, "Not Done Until Brad Says So" gate. Criterion #9 moved to Stretch Goal.</td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>2026-03-03</td>
+<td>Added Saylor's mental models (cheerful &amp; constructive, staying in lane, laser focus) to context, outcome, and criterion #4. Criterion #9 test updated: re-deploy to Mike Israetel/bodybuilding as proof of reusability.</td>
+</tr>
+<tr>
+<td>1.0</td>
+<td>2026-03-03</td>
+<td>Initial draft. 9 criteria.</td>
+</tr>
+</tbody>
+</table></body></html>
