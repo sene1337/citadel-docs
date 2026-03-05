@@ -6,222 +6,62 @@
   <title>AI/OpenClaw Consultant — Definition of Done</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:         #0d0f14;
-      --surface:    #161921;
-      --surface-2:  #1e2230;
-      --border:     #2a2f42;
-      --accent:     #f7931a;   /* Bitcoin orange */
-      --accent-dim: rgba(247,147,26,.12);
-      --text:       #e4e6ed;
-      --muted:      #7a8099;
-      --green:      #3ecf8e;
-      --red:        #ff5f57;
-      --blue:       #58a6ff;
-      --radius:     10px;
-      --shadow:     0 4px 24px rgba(0,0,0,.45);
+      --bg: #0d0f14; --surface: #161921; --surface-2: #1e2230;
+      --border: #2a2f42; --accent: #f7931a; --accent-dim: rgba(247,147,26,.12);
+      --text: #e4e6ed; --muted: #7a8099; --green: #3ecf8e; --red: #ff5f57;
+      --radius: 10px; --shadow: 0 4px 24px rgba(0,0,0,.45);
     }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      font-size: 16px;
-      line-height: 1.7;
-      min-height: 100vh;
-      padding: 2.5rem 1.5rem 5rem;
-    }
-
-    /* ── Layout ── */
-    .container {
-      max-width: 820px;
-      margin: 0 auto;
-    }
-
-    /* ── Hero ── */
-    .hero {
-      text-align: center;
-      padding: 3.5rem 2rem 3rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% -20%, rgba(247,147,26,.18) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .hero-eyebrow {
-      font-size: .75rem;
-      font-weight: 600;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: .75rem;
-    }
-    .hero h1 {
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 700;
-      line-height: 1.2;
-      color: #fff;
-      margin-bottom: 1.25rem;
-    }
-    .meta-row {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .meta-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: .4rem;
-      font-size: .8rem;
-      font-weight: 500;
-      color: var(--muted);
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: .3rem .85rem;
-    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 16px; line-height: 1.7; padding: 2.5rem 1.5rem 5rem; }
+    .container { max-width: 820px; margin: 0 auto; }
+    .hero { text-align: center; padding: 3.5rem 2rem 3rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 2rem; position: relative; overflow: hidden; }
+    .hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% -20%, rgba(247,147,26,.18) 0%, transparent 70%); pointer-events: none; }
+    .hero-eyebrow { font-size: .75rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: .75rem; }
+    .hero h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 700; line-height: 1.2; color: #fff; margin-bottom: 1.25rem; }
+    .meta-row { display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap; }
+    .meta-pill { display: inline-flex; align-items: center; gap: .4rem; font-size: .8rem; font-weight: 500; color: var(--muted); background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: .3rem .85rem; }
     .meta-pill.draft { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
     .meta-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; }
-
-    /* ── Sections ── */
-    .section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      margin-bottom: 1.5rem;
-      overflow: hidden;
-    }
-
-    .section-header {
-      padding: 1.25rem 1.75rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: .75rem;
-    }
-    .section-icon {
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-    .section-title {
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: .02em;
-      color: #fff;
-      text-transform: uppercase;
-    }
-    .section-body {
-      padding: 1.5rem 1.75rem;
-    }
-
-    /* ── Prose ── */
+    .section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.5rem; overflow: hidden; }
+    .section-header { padding: 1.25rem 1.75rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .75rem; }
+    .section-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .section-title { font-size: 1rem; font-weight: 700; letter-spacing: .02em; color: #fff; text-transform: uppercase; }
+    .section-body { padding: 1.5rem 1.75rem; }
     p { margin-bottom: .9rem; color: var(--text); }
     p:last-child { margin-bottom: 0; }
-
     strong { color: #fff; font-weight: 600; }
-
-    /* ── Not-lists ── */
-    .not-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: .55rem;
-    }
-    .not-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: .65rem;
-      color: var(--muted);
-      font-size: .95rem;
-    }
-    .not-list li::before {
-      content: "✕";
-      color: var(--red);
-      font-size: .85rem;
-      flex-shrink: 0;
-      margin-top: .22rem;
-      font-weight: 700;
-    }
-
-    /* ── DoD Checklist ── */
-    .dod-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      counter-reset: dod;
-    }
-    .dod-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.1rem 1.25rem;
-      transition: border-color .2s;
-    }
+    .not-list { list-style: none; display: flex; flex-direction: column; gap: .55rem; }
+    .not-list li { display: flex; align-items: flex-start; gap: .65rem; color: var(--muted); font-size: .95rem; }
+    .not-list li::before { content: "✕"; color: var(--red); font-size: .85rem; flex-shrink: 0; margin-top: .22rem; font-weight: 700; }
+    .dod-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; counter-reset: dod; }
+    .dod-item { display: flex; align-items: flex-start; gap: 1rem; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem; transition: border-color .2s; }
     .dod-item:hover { border-color: var(--accent); }
-    .dod-num {
-      counter-increment: dod;
-      font-size: .75rem;
-      font-weight: 700;
-      color: var(--accent);
-      background: var(--accent-dim);
-      border: 1px solid var(--accent);
-      border-radius: 6px;
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: .1rem;
-    }
+    .dod-num { font-size: .75rem; font-weight: 700; color: var(--accent); background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 6px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .1rem; }
     .dod-content { flex: 1; }
-    .dod-label {
-      font-weight: 700;
-      color: #fff;
-      display: block;
-      margin-bottom: .3rem;
-      font-size: .975rem;
-    }
-    .dod-desc {
-      color: var(--muted);
-      font-size: .9rem;
-      line-height: 1.6;
-    }
-
-    /* ── Accent stripe ── */
-    .accent-stripe {
-      height: 3px;
-      background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
-      border-radius: 3px 0 0 3px;
-      margin-bottom: 1.5rem;
-    }
-
-    /* ── Footer ── */
-    .footer {
-      text-align: center;
-      margin-top: 3rem;
-      color: var(--muted);
-      font-size: .8rem;
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 540px) {
+    .dod-label { font-weight: 700; color: #fff; display: block; margin-bottom: .3rem; font-size: .975rem; }
+    .dod-desc { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+    .pattern-card { background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: .75rem; }
+    .pattern-card:last-child { margin-bottom: 0; }
+    .pattern-num { color: var(--accent); font-weight: 700; font-size: .85rem; margin-bottom: .25rem; }
+    .pattern-title { color: #fff; font-weight: 700; font-size: .95rem; margin-bottom: .35rem; }
+    .pattern-desc { color: var(--muted); font-size: .88rem; line-height: 1.55; }
+    .contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .contrast-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; }
+    .contrast-card.before { border-top: 3px solid var(--red); }
+    .contrast-card.after { border-top: 3px solid var(--green); }
+    .contrast-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: .5rem; }
+    .contrast-card.before .contrast-label { color: var(--red); }
+    .contrast-card.after .contrast-label { color: var(--green); }
+    .contrast-text { color: var(--muted); font-size: .9rem; line-height: 1.6; }
+    .feeling-box { background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 8px; padding: 1.25rem; }
+    .feeling-box p { color: var(--text); font-style: italic; }
+    .check-list { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+    .check-list li { display: flex; align-items: flex-start; gap: .65rem; color: var(--text); font-size: .92rem; }
+    .check-list li::before { content: "✓"; color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .meta-quote { color: var(--muted); font-size: .9rem; font-style: italic; border-left: 3px solid var(--accent); padding-left: 1rem; margin-top: 1rem; }
+    .footer { text-align: center; margin-top: 3rem; color: var(--muted); font-size: .8rem; }
+    @media (max-width: 640px) {
+      .contrast-grid { grid-template-columns: 1fr; }
       .section-body, .section-header { padding-left: 1.1rem; padding-right: 1.1rem; }
       .hero { padding: 2.25rem 1.25rem 2rem; }
     }
@@ -230,17 +70,16 @@
 <body>
 <div class="container">
 
-  <!-- ── Hero ── -->
   <div class="hero">
     <div class="hero-eyebrow">Consulting Engagement</div>
     <h1>AI / OpenClaw Consultant<br>Definition of Done</h1>
     <div class="meta-row">
-      <span class="meta-pill"><span>📅</span> Created: 2026-03-03</span>
-      <span class="meta-pill draft"><span class="dot"></span> DRAFT — Needs Brad's Review</span>
+      <span class="meta-pill"><span>📅</span> Updated: 2026-03-05</span>
+      <span class="meta-pill draft"><span class="dot"></span> DRAFT v2</span>
     </div>
   </div>
 
-  <!-- ── The Problem ── -->
+  <!-- THE PROBLEM -->
   <div class="section">
     <div class="section-header">
       <span class="section-icon">⚡</span>
@@ -252,7 +91,80 @@
     </div>
   </div>
 
-  <!-- ── What This IS ── -->
+  <!-- WHAT'S ACTUALLY GOING WRONG -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">🔥</span>
+      <span class="section-title">What's Actually Going Wrong</span>
+    </div>
+    <div class="section-body">
+      <p style="margin-bottom:1.25rem;">Over 3 weeks, we've logged <strong>54 regressions</strong>. The top failure patterns, ranked by how much of my time they burn:</p>
+
+      <div class="pattern-card">
+        <div class="pattern-num">#1</div>
+        <div class="pattern-title">Rule Exists, Didn't Follow (15+ occurrences)</div>
+        <div class="pattern-desc">The agent writes SOPs and hard gates, then violates them — sometimes within hours. I catch the same mistakes repeatedly. The fix creates another rule that also gets ignored.</div>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-num">#2</div>
+        <div class="pattern-title">Context Loss After Compaction (~5h/week)</div>
+        <div class="pattern-desc">The AI's context window fills up and compacts. Post-compaction, it forgets project state, recent decisions, and tool configs. I have to re-explain things that were settled hours ago.</div>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-num">#3</div>
+        <div class="pattern-title">Gateway Crashes from Config Changes (6 in one day)</div>
+        <div class="pattern-desc">The agent edits its own runtime config, crashes itself, and I have to manually restart from a terminal. This happened 6 times in a single day.</div>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-num">#4</div>
+        <div class="pattern-title">Delegation Quality Failures</div>
+        <div class="pattern-desc">Sub-agents get vague prompts, produce wrong output, waste tokens. Work needs to be redone. Feels like burning money.</div>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-num">#5</div>
+        <div class="pattern-title">Tool Amnesia</div>
+        <div class="pattern-desc">Agent forgets tools it documented and used successfully. Presents workarounds instead of using existing infrastructure. I had to ask "does SearXNG work?" twice in the same session.</div>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-num">#6</div>
+        <div class="pattern-title">Model Routing &amp; Cost Blowouts (~$50/day when wrong)</div>
+        <div class="pattern-desc">OAuth tokens expire silently, routing falls back to expensive models, nobody notices for days.</div>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-num">#7</div>
+        <div class="pattern-title">Formatting &amp; Presentation</div>
+        <div class="pattern-desc">Sends unreadable content to Telegram (wide tables, raw markdown). I read on mobile.</div>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-num">#8</div>
+        <div class="pattern-title">Raw Errors Relayed</div>
+        <div class="pattern-desc">Dumps debugging output into chat instead of handling failures silently.</div>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-num">#9</div>
+        <div class="pattern-title">Context Blowout</div>
+        <div class="pattern-desc">Reads too much into one session, crashes.</div>
+      </div>
+
+      <div class="pattern-card">
+        <div class="pattern-num">#10</div>
+        <div class="pattern-title">Guessing Instead of Reading Docs</div>
+        <div class="pattern-desc">Tries things by trial and error instead of reading the manual first. Results in cascading failures.</div>
+      </div>
+
+      <p class="meta-quote">The meta-pattern: I'm spending ~5 hours/day doing tech support for my own AI system instead of strategy and capital allocation. The agent built genuinely good infrastructure — but executes inconsistently against it.</p>
+    </div>
+  </div>
+
+  <!-- WHAT THIS IS -->
   <div class="section">
     <div class="section-header">
       <span class="section-icon">✅</span>
@@ -263,7 +175,7 @@
     </div>
   </div>
 
-  <!-- ── What This Is NOT ── -->
+  <!-- WHAT THIS IS NOT -->
   <div class="section">
     <div class="section-header">
       <span class="section-icon">🚫</span>
@@ -274,11 +186,13 @@
         <li>A permanent Head of AI role (that's a separate hire)</li>
         <li>"Fix everything for me" — the goal is <em>my</em> capability, not dependency on you</li>
         <li>A general AI strategy engagement — this is specifically about operational competence with agentic AI tools</li>
+        <li>About building new AI features or products</li>
+        <li>About choosing which AI platform to use — I'm committed to OpenClaw</li>
       </ul>
     </div>
   </div>
 
-  <!-- ── Definition of Done ── -->
+  <!-- DEFINITION OF DONE -->
   <div class="section">
     <div class="section-header">
       <span class="section-icon">🎯</span>
@@ -287,7 +201,6 @@
     <div class="section-body">
       <p style="margin-bottom:1.5rem; color: var(--muted); font-size:.9rem;">This engagement is complete when all six conditions are met:</p>
       <ol class="dod-list">
-
         <li class="dod-item">
           <div class="dod-num">1</div>
           <div class="dod-content">
@@ -295,15 +208,13 @@
             <span class="dod-desc">I have a written report telling me what's working, what's broken, and what to change — ranked by priority.</span>
           </div>
         </li>
-
         <li class="dod-item">
           <div class="dod-num">2</div>
           <div class="dod-content">
             <span class="dod-label">Failure Patterns Understood</span>
-            <span class="dod-desc">I know specifically why recent projects went sideways (task scoping? delegation? expectations? tool limits?) and I have a documented playbook for avoiding those patterns.</span>
+            <span class="dod-desc">I know specifically why the top 10 patterns above keep happening (task scoping? delegation? expectations? tool limits?) and I have a documented playbook for avoiding them.</span>
           </div>
         </li>
-
         <li class="dod-item">
           <div class="dod-num">3</div>
           <div class="dod-content">
@@ -311,23 +222,20 @@
             <span class="dod-desc">I know what to give the agent vs. what needs a human, how to scope tasks so they succeed, and when to stop pushing and escalate. Written down, not just discussed.</span>
           </div>
         </li>
-
         <li class="dod-item">
           <div class="dod-num">4</div>
           <div class="dod-content">
             <span class="dod-label">Workspace &amp; Playbooks Simplified</span>
-            <span class="dod-desc">Stripped to what I'll actually use. No bloat.</span>
+            <span class="dod-desc">Stripped to what I'll actually use. No bloat. The agent has 54 regression entries and growing — something is structurally wrong with the correction system itself.</span>
           </div>
         </li>
-
         <li class="dod-item">
           <div class="dod-num">5</div>
           <div class="dod-content">
-            <span class="dod-label"><a href="saylor-kb-dod.html" style="color: #f7931a; text-decoration: none; border-bottom: 1px solid #f7931a44;">Saylor KB</a> Finished &amp; Usable</span>
-            <span class="dod-desc">All transcripts speaker-labeled, searchable, indexed. My team (Jessica, Anton) can query it with no problems. I drove the completion with the consultant coaching. <a href="saylor-kb-dod.html" style="color: #f7931a; font-size: 0.9em;">→ View Saylor KB Definition of Done</a></span>
+            <span class="dod-label"><a href="saylor-kb-dod.html" style="color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(247,147,26,.3);">Saylor KB</a> Finished &amp; Usable</span>
+            <span class="dod-desc">All transcripts speaker-labeled, searchable, indexed. My team (Jessica, Anton) can query it with no problems. I drove the completion with the consultant coaching. <a href="saylor-kb-dod.html" style="color: var(--accent); font-size: 0.9em;">→ View Saylor KB Definition of Done</a></span>
           </div>
         </li>
-
         <li class="dod-item">
           <div class="dod-num">6</div>
           <div class="dod-content">
@@ -335,13 +243,53 @@
             <span class="dod-desc">Summary of all recommendations, changes made, what to do next, and hiring criteria for the eventual Head of AI role.</span>
           </div>
         </li>
-
       </ol>
     </div>
   </div>
 
+  <!-- WHAT SUCCESS LOOKS LIKE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">🌅</span>
+      <span class="section-title">What Success Looks Like</span>
+    </div>
+    <div class="section-body">
+      <div class="contrast-grid">
+        <div class="contrast-card before">
+          <div class="contrast-label">Before</div>
+          <div class="contrast-text">I wake up, open Telegram, and spend the first 2 hours re-teaching my AI what it forgot overnight, fixing things it broke, and debugging why a model is running on the wrong provider. By the time I get to real work, I'm frustrated and behind.</div>
+        </div>
+        <div class="contrast-card after">
+          <div class="contrast-label">After</div>
+          <div class="contrast-text">I wake up, open Telegram, and my AI has already done its morning routine. I see a clean status update, my priorities for the day, and zero fires. I spend 30 minutes directing work, not debugging it. The system runs. I run the system.</div>
+        </div>
+      </div>
+      <div class="feeling-box">
+        <p><strong>The feeling:</strong> "I finally have a working AI operating system. I know what to give it, what to keep, and how to fix things when they break — without losing my morning."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT SUCCESS LOOKS LIKE FOR THE CONSULTANT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">🏆</span>
+      <span class="section-title">What Success Looks Like for the Consultant</span>
+    </div>
+    <div class="section-body">
+      <p style="margin-bottom:1rem; color: var(--muted); font-size:.9rem;">You'll know you've delivered when:</p>
+      <ul class="check-list">
+        <li>Brad can explain — in his own words — why each of the top 10 failure patterns happens and what the correct response is</li>
+        <li>Brad has used the delegation framework successfully on at least 3 real tasks during the engagement</li>
+        <li>The Saylor KB project is complete and queryable by the team</li>
+        <li>Brad's daily "tech support time" has dropped from ~5 hours to under 30 minutes</li>
+        <li>The handoff document exists and Brad has reviewed it</li>
+      </ul>
+    </div>
+  </div>
+
   <div class="footer">
-    Generated from <code>consultant-dod.md</code> · AI/OpenClaw Workspace
+    Generated from <code>consultant-dod.md</code> · AI/OpenClaw Workspace · v2
   </div>
 
 </div>
