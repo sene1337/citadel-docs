@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI/OpenClaw Consultant — Definition of Done</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0d0f14;
+      --surface:    #161921;
+      --surface-2:  #1e2230;
+      --border:     #2a2f42;
+      --accent:     #f7931a;   /* Bitcoin orange */
+      --accent-dim: rgba(247,147,26,.12);
+      --text:       #e4e6ed;
+      --muted:      #7a8099;
+      --green:      #3ecf8e;
+      --red:        #ff5f57;
+      --blue:       #58a6ff;
+      --radius:     10px;
+      --shadow:     0 4px 24px rgba(0,0,0,.45);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      min-height: 100vh;
+      padding: 2.5rem 1.5rem 5rem;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 3.5rem 2rem 3rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% -20%, rgba(247,147,26,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .75rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 1.25rem;
+    }
+    .meta-row {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: .3rem .85rem;
+    }
+    .meta-pill.draft { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+    .meta-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); display: inline-block; }
+
+    /* ── Sections ── */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    .section-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      color: #fff;
+      text-transform: uppercase;
+    }
+    .section-body {
+      padding: 1.5rem 1.75rem;
+    }
+
+    /* ── Prose ── */
+    p { margin-bottom: .9rem; color: var(--text); }
+    p:last-child { margin-bottom: 0; }
+
+    strong { color: #fff; font-weight: 600; }
+
+    /* ── Not-lists ── */
+    .not-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: .55rem;
+    }
+    .not-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: .65rem;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+    .not-list li::before {
+      content: "✕";
+      color: var(--red);
+      font-size: .85rem;
+      flex-shrink: 0;
+      margin-top: .22rem;
+      font-weight: 700;
+    }
+
+    /* ── DoD Checklist ── */
+    .dod-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      counter-reset: dod;
+    }
+    .dod-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.1rem 1.25rem;
+      transition: border-color .2s;
+    }
+    .dod-item:hover { border-color: var(--accent); }
+    .dod-num {
+      counter-increment: dod;
+      font-size: .75rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: .1rem;
+    }
+    .dod-content { flex: 1; }
+    .dod-label {
+      font-weight: 700;
+      color: #fff;
+      display: block;
+      margin-bottom: .3rem;
+      font-size: .975rem;
+    }
+    .dod-desc {
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.6;
+    }
+
+    /* ── Accent stripe ── */
+    .accent-stripe {
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent) 0%, transparent 100%);
+      border-radius: 3px 0 0 3px;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 540px) {
+      .section-body, .section-header { padding-left: 1.1rem; padding-right: 1.1rem; }
+      .hero { padding: 2.25rem 1.25rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ── Hero ── -->
+  <div class="hero">
+    <div class="hero-eyebrow">Consulting Engagement</div>
+    <h1>AI / OpenClaw Consultant<br>Definition of Done</h1>
+    <div class="meta-row">
+      <span class="meta-pill"><span>📅</span> Created: 2026-03-03</span>
+      <span class="meta-pill draft"><span class="dot"></span> DRAFT — Needs Brad's Review</span>
+    </div>
+  </div>
+
+  <!-- ── The Problem ── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">⚡</span>
+      <span class="section-title">The Problem</span>
+    </div>
+    <div class="section-body">
+      <p>I'm a Bitcoin strategist and capital allocator running OpenClaw as my AI operating system. I've hit the ceiling on what I can achieve solo — complex multi-step projects spiral into frustration because managing the AI agent requires operator-level skills I haven't built yet. <strong>The friction is bleeding into my life. That's unacceptable.</strong></p>
+      <p>I don't need to become an AI engineer. I need to become a competent <strong>AI executive</strong> — someone who can direct complex work without getting pulled into the weeds.</p>
+    </div>
+  </div>
+
+  <!-- ── What This IS ── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">✅</span>
+      <span class="section-title">What This Engagement IS</span>
+    </div>
+    <div class="section-body">
+      <p>A <strong>short-term consulting engagement</strong> (not a permanent hire) to audit my AI setup, identify where I'm going wrong, and level me up so I can direct AI work without it wrecking my day.</p>
+    </div>
+  </div>
+
+  <!-- ── What This Is NOT ── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">🚫</span>
+      <span class="section-title">What This Engagement Is NOT</span>
+    </div>
+    <div class="section-body">
+      <ul class="not-list">
+        <li>A permanent Head of AI role (that's a separate hire)</li>
+        <li>"Fix everything for me" — the goal is <em>my</em> capability, not dependency on you</li>
+        <li>A general AI strategy engagement — this is specifically about operational competence with agentic AI tools</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── Definition of Done ── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">🎯</span>
+      <span class="section-title">Definition of Done</span>
+    </div>
+    <div class="section-body">
+      <p style="margin-bottom:1.5rem; color: var(--muted); font-size:.9rem;">This engagement is complete when all six conditions are met:</p>
+      <ol class="dod-list">
+
+        <li class="dod-item">
+          <div class="dod-num">1</div>
+          <div class="dod-content">
+            <span class="dod-label">OpenClaw Setup Audited</span>
+            <span class="dod-desc">I have a written report telling me what's working, what's broken, and what to change — ranked by priority.</span>
+          </div>
+        </li>
+
+        <li class="dod-item">
+          <div class="dod-num">2</div>
+          <div class="dod-content">
+            <span class="dod-label">Failure Patterns Understood</span>
+            <span class="dod-desc">I know specifically why recent projects went sideways (task scoping? delegation? expectations? tool limits?) and I have a documented playbook for avoiding those patterns.</span>
+          </div>
+        </li>
+
+        <li class="dod-item">
+          <div class="dod-num">3</div>
+          <div class="dod-content">
+            <span class="dod-label">Delegation Framework for AI</span>
+            <span class="dod-desc">I know what to give the agent vs. what needs a human, how to scope tasks so they succeed, and when to stop pushing and escalate. Written down, not just discussed.</span>
+          </div>
+        </li>
+
+        <li class="dod-item">
+          <div class="dod-num">4</div>
+          <div class="dod-content">
+            <span class="dod-label">Workspace &amp; Playbooks Simplified</span>
+            <span class="dod-desc">Stripped to what I'll actually use. No bloat.</span>
+          </div>
+        </li>
+
+        <li class="dod-item">
+          <div class="dod-num">5</div>
+          <div class="dod-content">
+            <span class="dod-label">Dan Martell KB Finished &amp; Usable</span>
+            <span class="dod-desc">All transcripts speaker-labeled, searchable, indexed. My team (Jessica, Anton) can query it with no problems. I drove the completion with the consultant coaching.</span>
+          </div>
+        </li>
+
+        <li class="dod-item">
+          <div class="dod-num">6</div>
+          <div class="dod-content">
+            <span class="dod-label">Handoff Document in Hand</span>
+            <span class="dod-desc">Summary of all recommendations, changes made, what to do next, and hiring criteria for the eventual Head of AI role.</span>
+          </div>
+        </li>
+
+      </ol>
+    </div>
+  </div>
+
+  <div class="footer">
+    Generated from <code>consultant-dod.md</code> · AI/OpenClaw Workspace
+  </div>
+
+</div>
+</body>
+</html>
