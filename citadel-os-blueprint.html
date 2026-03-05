@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Citadel OS — Life-Wide Operating System for Founders</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0f14; --surface: #161921; --surface-2: #1e2230; --surface-3: #242840;
+      --border: #2a2f42; --accent: #f7931a; --accent-dim: rgba(247,147,26,.12);
+      --accent-dim2: rgba(247,147,26,.06);
+      --text: #e4e6ed; --muted: #7a8099; --green: #3ecf8e; --red: #ff5f57; --yellow: #f7c948;
+      --radius: 10px; --shadow: 0 4px 24px rgba(0,0,0,.45);
+    }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 16px; line-height: 1.7; padding: 2.5rem 1.5rem 6rem; }
+    .container { max-width: 860px; margin: 0 auto; }
+
+    /* HERO */
+    .hero { text-align: center; padding: 4rem 2rem 3.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 2rem; position: relative; overflow: hidden; }
+    .hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% -20%, rgba(247,147,26,.20) 0%, transparent 68%); pointer-events: none; }
+    .hero-eyebrow { font-size: .75rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin-bottom: .85rem; }
+    .hero h1 { font-size: clamp(1.7rem, 4.5vw, 2.6rem); font-weight: 800; line-height: 1.18; color: #fff; margin-bottom: 1rem; }
+    .hero-sub { color: var(--muted); font-size: 1.05rem; max-width: 540px; margin: 0 auto 1.5rem; }
+    .meta-row { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .meta-pill { display: inline-flex; align-items: center; gap: .4rem; font-size: .8rem; font-weight: 500; color: var(--muted); background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: .3rem .9rem; }
+
+    /* TOC */
+    .toc-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 2rem; overflow: hidden; }
+    .toc-header { padding: 1rem 1.75rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .75rem; }
+    .toc-header-icon { font-size: 1.1rem; }
+    .toc-header-title { font-size: .85rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .toc-body { padding: 1.25rem 1.75rem; display: grid; grid-template-columns: 1fr 1fr; gap: .35rem .75rem; }
+    .toc-link { color: var(--accent); text-decoration: none; font-size: .88rem; transition: color .15s; }
+    .toc-link:hover { color: #fba94a; text-decoration: underline; }
+
+    /* SECTION */
+    .section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 1.75rem; overflow: hidden; }
+    .section-header { padding: 1.25rem 1.75rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .75rem; }
+    .section-icon { font-size: 1.25rem; flex-shrink: 0; }
+    .section-title { font-size: 1rem; font-weight: 700; letter-spacing: .03em; color: #fff; text-transform: uppercase; }
+    .section-body { padding: 1.75rem; }
+
+    /* TYPOGRAPHY */
+    p { margin-bottom: .9rem; color: var(--text); }
+    p:last-child { margin-bottom: 0; }
+    strong { color: #fff; font-weight: 600; }
+    em { color: var(--muted); font-style: italic; }
+    h3 { font-size: 1rem; font-weight: 700; color: #fff; margin: 1.75rem 0 .6rem; border-bottom: 1px solid var(--border); padding-bottom: .4rem; }
+    h3:first-child { margin-top: 0; }
+    h4 { font-size: .92rem; font-weight: 700; color: var(--accent); margin: 1.25rem 0 .4rem; }
+    h4:first-child { margin-top: 0; }
+
+    /* CALLOUT */
+    .callout { background: var(--accent-dim); border: 1px solid rgba(247,147,26,.3); border-left: 3px solid var(--accent); border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; }
+    .callout p { color: var(--text); font-size: .92rem; margin-bottom: 0; }
+    .callout.red { background: rgba(255,95,87,.08); border-color: rgba(255,95,87,.3); border-left-color: var(--red); }
+    .callout.red p { color: var(--text); }
+    .callout.insight { background: var(--accent-dim2); border-color: rgba(247,147,26,.2); border-left-color: var(--accent); }
+
+    /* CODE / MONOSPACE DIAGRAMS */
+    .diagram-wrap { background: #0a0c10; border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; overflow-x: auto; margin: 1rem 0; }
+    .diagram-wrap pre { font-family: "SF Mono", "Cascadia Code", "Fira Code", Consolas, monospace; font-size: .78rem; line-height: 1.65; color: #c8cde0; white-space: pre; }
+
+    /* DOMAIN TABLE */
+    .domain-table { width: 100%; border-collapse: collapse; font-size: .9rem; margin: 1rem 0; }
+    .domain-table th { text-align: left; padding: .6rem .9rem; background: var(--surface-2); color: var(--muted); font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; border-bottom: 2px solid var(--border); }
+    .domain-table td { padding: .7rem .9rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .domain-table tr:last-child td { border-bottom: none; }
+    .domain-table tr:hover td { background: var(--surface-2); }
+    .badge { display: inline-flex; align-items: center; gap: .35rem; font-size: .75rem; font-weight: 600; border-radius: 999px; padding: .2rem .65rem; }
+    .badge-green { background: rgba(62,207,142,.12); color: var(--green); border: 1px solid rgba(62,207,142,.25); }
+    .badge-red { background: rgba(255,95,87,.1); color: var(--red); border: 1px solid rgba(255,95,87,.22); }
+    .badge-yellow { background: rgba(247,201,72,.1); color: var(--yellow); border: 1px solid rgba(247,201,72,.22); }
+    .badge-gray { background: var(--surface-2); color: var(--muted); border: 1px solid var(--border); }
+
+    /* ORG CHART */
+    .org-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.35rem; margin-bottom: .9rem; }
+    .org-card.founder { border-left: 3px solid var(--accent); }
+    .org-card.empty-seat { border: 2px dashed rgba(255,95,87,.5); background: rgba(255,95,87,.05); }
+    .org-card.team-member { border-left: 3px solid var(--border); margin-left: 2rem; }
+    .org-card.ai { border-left: 3px solid #7c5cfc; }
+    .org-card-title { font-weight: 700; color: #fff; font-size: .95rem; margin-bottom: .25rem; }
+    .org-card-sub { color: var(--muted); font-size: .82rem; margin-bottom: .5rem; }
+    .org-card-note { font-size: .83rem; color: var(--text); line-height: 1.5; }
+    .org-connector { width: 2px; height: 1rem; background: var(--border); margin-left: 1.5rem; margin-bottom: 0; }
+
+    /* ROCK CASCADE */
+    .rock-level { border-radius: 8px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; border: 1px solid var(--border); }
+    .rock-level-1 { background: rgba(247,147,26,.07); border-color: rgba(247,147,26,.25); }
+    .rock-level-2 { background: rgba(62,207,142,.05); border-color: rgba(62,207,142,.2); }
+    .rock-level-3 { background: var(--surface-2); }
+    .rock-level-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; margin-bottom: .5rem; }
+    .rock-level-1 .rock-level-label { color: var(--accent); }
+    .rock-level-2 .rock-level-label { color: var(--green); }
+    .rock-level-3 .rock-level-label { color: var(--muted); }
+    .rock-level-title { font-weight: 700; color: #fff; margin-bottom: .35rem; font-size: .95rem; }
+    .rock-level-body { color: var(--text); font-size: .88rem; line-height: 1.6; }
+    .rock-level-body ul { list-style: none; margin-top: .5rem; display: flex; flex-direction: column; gap: .25rem; }
+    .rock-level-body ul li { color: var(--muted); font-size: .85rem; }
+    .rock-level-body ul li::before { content: "→ "; color: var(--accent); }
+    .cascade-arrow { text-align: center; color: var(--muted); font-size: .8rem; margin: .25rem 0; }
+
+    /* DM FRAMEWORK */
+    .dm-step { display: flex; gap: 1rem; align-items: flex-start; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: .75rem; transition: border-color .2s; }
+    .dm-step:hover { border-color: var(--accent); }
+    .dm-step-num { font-size: .75rem; font-weight: 700; color: var(--accent); background: var(--accent-dim); border: 1px solid var(--accent); border-radius: 6px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .1rem; }
+    .dm-step-content { flex: 1; }
+    .dm-step-title { font-weight: 700; color: #fff; font-size: .92rem; margin-bottom: .25rem; }
+    .dm-step-desc { color: var(--muted); font-size: .87rem; line-height: 1.55; }
+
+    /* CHECK / CROSS LISTS */
+    .check-list, .cross-list { list-style: none; display: flex; flex-direction: column; gap: .45rem; margin: .75rem 0; }
+    .check-list li, .cross-list li { display: flex; align-items: flex-start; gap: .6rem; font-size: .9rem; color: var(--text); }
+    .check-list li::before { content: "✓"; color: var(--green); font-weight: 700; flex-shrink: 0; }
+    .cross-list li::before { content: "✗"; color: var(--red); font-weight: 700; flex-shrink: 0; margin-top: .05rem; }
+
+    /* PITFALLS */
+    .pitfall-card { display: flex; gap: 1rem; align-items: flex-start; background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 1rem 1.25rem; margin-bottom: .75rem; }
+    .pitfall-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: .05rem; }
+    .pitfall-content {}
+    .pitfall-title { font-weight: 700; color: #fff; font-size: .92rem; margin-bottom: .25rem; }
+    .pitfall-desc { color: var(--muted); font-size: .87rem; line-height: 1.55; }
+
+    /* MILESTONES */
+    .milestone-row { display: flex; gap: 1rem; align-items: flex-start; padding: .75rem 0; border-bottom: 1px solid var(--border); }
+    .milestone-row:last-child { border-bottom: none; }
+    .milestone-status { flex-shrink: 0; font-size: 1rem; margin-top: .1rem; }
+    .milestone-content { flex: 1; }
+    .milestone-title { font-weight: 600; color: #fff; font-size: .92rem; }
+    .milestone-dri { color: var(--muted); font-size: .8rem; margin-top: .15rem; }
+
+    /* TOOL TABLE */
+    .tool-table { width: 100%; border-collapse: collapse; font-size: .88rem; margin-top: .5rem; }
+    .tool-table th { text-align: left; padding: .55rem .85rem; background: var(--surface-2); color: var(--muted); font-size: .73rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; border-bottom: 2px solid var(--border); }
+    .tool-table td { padding: .65rem .85rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .tool-table tr:last-child td { border-bottom: 2px solid var(--accent); font-weight: 700; color: #fff; }
+    .tool-table tr:hover td { background: var(--surface-2); }
+
+    /* DECISION LOG */
+    .decision-option { display: flex; gap: .75rem; align-items: flex-start; padding: .65rem 1rem; border-radius: 6px; margin-bottom: .4rem; border: 1px solid var(--border); }
+    .decision-option.chosen { background: var(--accent-dim); border-color: rgba(247,147,26,.3); }
+    .decision-option.unchosen { background: var(--surface-2); }
+    .option-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; flex-shrink: 0; padding: .15rem .5rem; border-radius: 4px; }
+    .option-label.chosen { background: var(--accent); color: #000; }
+    .option-label.unchosen { background: var(--surface-3); color: var(--muted); }
+    .option-text { font-size: .87rem; color: var(--text); line-height: 1.5; }
+    .option-text strong { color: #fff; }
+
+    /* BLOCKQUOTE */
+    blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; margin: 1rem 0; color: var(--muted); font-style: italic; font-size: .92rem; }
+
+    /* FOOTER */
+    .footer { text-align: center; margin-top: 4rem; color: var(--muted); font-size: .8rem; line-height: 1.8; }
+    .footer strong { color: var(--text); }
+
+    @media (max-width: 640px) {
+      .toc-body { grid-template-columns: 1fr; }
+      .section-body, .section-header { padding-left: 1.1rem; padding-right: 1.1rem; }
+      .hero { padding: 2.5rem 1.25rem 2rem; }
+      .org-card.team-member { margin-left: 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Framework Document · Bitcoin Family Office</div>
+    <h1>Citadel OS</h1>
+    <p class="hero-sub">A Life-Wide Operating System for Founders running Bitcoin-focused family offices, multi-company portfolios, and layered life domains.</p>
+    <div class="meta-row">
+      <span class="meta-pill">📅 March 2026</span>
+      <span class="meta-pill">⚡ Version 2.0</span>
+      <span class="meta-pill">₿ Framework</span>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <div class="toc-section">
+    <div class="toc-header">
+      <span class="toc-header-icon">📋</span>
+      <span class="toc-header-title">Contents</span>
+    </div>
+    <div class="toc-body">
+      <a class="toc-link" href="#problem">1. The Problem We're Solving</a>
+      <a class="toc-link" href="#architecture">2. Architecture — Two Layers</a>
+      <a class="toc-link" href="#domains">3. Domain Map — 8 Life Domains</a>
+      <a class="toc-link" href="#org">4. Org & Replacement Ladder</a>
+      <a class="toc-link" href="#rocks">5. Rock Cascade</a>
+      <a class="toc-link" href="#cos">6. The CoS Seat — Gap Analysis</a>
+      <a class="toc-link" href="#dm">7. Execution Playbook (Dan Martell)</a>
+      <a class="toc-link" href="#tools">8. Tool Stack</a>
+      <a class="toc-link" href="#milestones">9. Milestones</a>
+      <a class="toc-link" href="#pitfalls">10. Pitfalls & Design Principles</a>
+    </div>
+  </div>
+
+  <!-- THE PROBLEM -->
+  <div class="section" id="problem">
+    <div class="section-header">
+      <span class="section-icon">⚡</span>
+      <span class="section-title">The Problem We're Solving</span>
+    </div>
+    <div class="section-body">
+      <p>A Bitcoin-focused founder running a family office ("the Citadel") spans multiple companies, a Bitcoin angel investing portfolio, properties, a non-profit, a team of human operators, and an AI agent. As of today, there is <strong>no operating system</strong> — work is scattered across 6+ disconnected tools with zero shared visibility.</p>
+      <p>This document builds the machine.</p>
+
+      <h3>What a Citadel-Level Founder Has Going On</h3>
+
+      <h4>Companies & Ventures</h4>
+      <ul class="check-list">
+        <li>A media company (potentially dormant or disorganized)</li>
+        <li>A Bitcoin nonprofit</li>
+        <li>Multiple portfolio companies in various stages</li>
+        <li>Family / household projects and initiatives</li>
+      </ul>
+
+      <h4>Investments</h4>
+      <ul class="check-list">
+        <li>Holding company / Bitcoin angel investing portfolio</li>
+        <li>Portfolio tracked by an ops partner — needs better tooling and workflow</li>
+        <li>Deal documents and updates piling up rather than captured in a system</li>
+      </ul>
+
+      <h4>The Core Problems</h4>
+      <div class="dm-step">
+        <div class="dm-step-num">1</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">No shared visibility</div>
+          <div class="dm-step-desc">Everyone is working but nobody can see across the team</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">2</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">No accountability rhythm</div>
+          <div class="dm-step-desc">Work gets delegated but there's no system to inspect progress</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">3</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">No consistent project structure</div>
+          <div class="dm-step-desc">Every project is ad hoc — no templates, no standards</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">4</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">No handoff standard</div>
+          <div class="dm-step-desc">If someone leaves, their knowledge goes with them</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">5</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Communication lives in DMs and group chats</div>
+          <div class="dm-step-desc">Scattered, unsearchable, and invisible to anyone not in the thread</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">6</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Too much delegated, not enough inspected</div>
+          <div class="dm-step-desc">"People respect what you inspect" — the system must make inspection easy</div>
+        </div>
+      </div>
+
+      <h3>The Deeper Problem</h3>
+      <p>The original instinct is to treat this as a company-level project management problem. <strong>It's not.</strong></p>
+      <p>A founder running a family office doesn't run one company — they run <strong>8+ life domains simultaneously</strong>. The real problem is the absence of a <strong>personal operating system</strong> that sits above all the companies and entities.</p>
+      <p>What actually happens without one: the founder gets overwhelmed and falls behind. Things don't get done. Standards slip. Accountability drops. Then reactive mode kicks in — putting out fires instead of building systems, managing crises instead of executing strategy. The cycle repeats because there's no structure to break it.</p>
+
+      <div class="callout red">
+        <p>⚠️ <strong>The most expensive vacancy in your org is the one that's making you do everyone else's job.</strong> Every day without a Chief of Staff is a day the Founder is managing 8 domains, multiple direct reports, cross-domain Rocks, and system design — instead of doing strategy and capital allocation.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div class="section" id="architecture">
+    <div class="section-header">
+      <span class="section-icon">🏗️</span>
+      <span class="section-title">Architecture — Two Layers</span>
+    </div>
+    <div class="section-body">
+      <p>The Citadel OS has two interlocking layers. <strong>Layer 1 is new</strong> and sits above everything. Layer 2 is the domain-level execution engine.</p>
+
+      <div style="background:#0a0c10; border:1px solid var(--border); border-radius:8px; padding:1.5rem; margin: 1rem 0;">
+        <div style="background:rgba(247,147,26,.08); border:1px solid rgba(247,147,26,.25); border-radius:6px; padding:1.25rem 1.5rem; margin-bottom:.75rem;">
+          <div style="font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--accent); margin-bottom:.5rem;">LAYER 1 — NEW</div>
+          <div style="font-weight:700; color:#fff; margin-bottom:.5rem;">The Founder's Life OS · Personal Operating System</div>
+          <p style="color:var(--muted); font-size:.87rem; margin-bottom:.75rem;">The top layer where the Founder plans and operates as CEO of their entire life. Cross-domain Rocks live here. The Chief of Staff seat lives here. Quarterly planning happens across all entities simultaneously.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:.5rem;">
+            <span style="background:var(--accent-dim); border:1px solid rgba(247,147,26,.3); border-radius:4px; padding:.2rem .6rem; font-size:.75rem; color:var(--accent); font-weight:600;">Founder's Quarterly Rocks</span>
+            <span style="background:var(--accent-dim); border:1px solid rgba(247,147,26,.3); border-radius:4px; padding:.2rem .6rem; font-size:.75rem; color:var(--accent); font-weight:600;">Cross-Domain Priorities</span>
+            <span style="background:var(--accent-dim); border:1px solid rgba(247,147,26,.3); border-radius:4px; padding:.2rem .6rem; font-size:.75rem; color:var(--accent); font-weight:600;">Capital Allocation</span>
+            <span style="background:var(--accent-dim); border:1px solid rgba(247,147,26,.3); border-radius:4px; padding:.2rem .6rem; font-size:.75rem; color:var(--accent); font-weight:600;">CoS Seat</span>
+            <span style="background:var(--accent-dim); border:1px solid rgba(247,147,26,.3); border-radius:4px; padding:.2rem .6rem; font-size:.75rem; color:var(--accent); font-weight:600;">Replacement Ladder</span>
+          </div>
+        </div>
+
+        <div style="text-align:center; color:var(--muted); font-size:.8rem; padding:.4rem 0;">⬇ Rocks cascade down &nbsp;·&nbsp; Status rolls up ⬆</div>
+
+        <div style="background:rgba(62,207,142,.05); border:1px solid rgba(62,207,142,.2); border-radius:6px; padding:1.25rem 1.5rem;">
+          <div style="font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.12em; color:var(--green); margin-bottom:.5rem;">LAYER 2 — DAN MARTELL FRAMEWORK</div>
+          <div style="font-weight:700; color:#fff; margin-bottom:.5rem;">Domain Execution · Per Company / Area</div>
+          <p style="color:var(--muted); font-size:.87rem; margin-bottom:.75rem;">Each domain uses the Martell project execution system — Rocks, Scorecard, weekly rhythm, DRI model. One instance per domain with its own operator.</p>
+          <div style="display:flex; flex-wrap:wrap; gap:.5rem;">
+            <span style="background:rgba(62,207,142,.1); border:1px solid rgba(62,207,142,.25); border-radius:4px; padding:.2rem .6rem; font-size:.75rem; color:var(--green); font-weight:600;">Rock Temple (3-5/quarter)</span>
+            <span style="background:rgba(62,207,142,.1); border:1px solid rgba(62,207,142,.25); border-radius:4px; padding:.2rem .6rem; font-size:.75rem; color:var(--green); font-weight:600;">Weekly Scorecard</span>
+            <span style="background:rgba(62,207,142,.1); border:1px solid rgba(62,207,142,.25); border-radius:4px; padding:.2rem .6rem; font-size:.75rem; color:var(--green); font-weight:600;">DRI Model</span>
+            <span style="background:rgba(62,207,142,.1); border:1px solid rgba(62,207,142,.25); border-radius:4px; padding:.2rem .6rem; font-size:.75rem; color:var(--green); font-weight:600;">S.A.D. Process</span>
+            <span style="background:rgba(62,207,142,.1); border:1px solid rgba(62,207,142,.25); border-radius:4px; padding:.2rem .6rem; font-size:.75rem; color:var(--green); font-weight:600;">Playbooks + SOPs</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout insight" style="margin-top:1.25rem;">
+        <p>💡 <strong>Core insight:</strong> The Dan Martell project execution system is Layer 2 — not the whole OS. The missing piece is Layer 1: a personal operating system that sits above all companies and domains. Without Layer 1, every domain competes for the Founder's attention on equal footing.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOMAIN MAP -->
+  <div class="section" id="domains">
+    <div class="section-header">
+      <span class="section-icon">🗺️</span>
+      <span class="section-title">Domain Map — 8 Life Domains</span>
+    </div>
+    <div class="section-body">
+      <p>Each domain has an assigned operator and runs its own Layer 2 execution system. Some domains are staffed; others need decisions or future hires.</p>
+      <table class="domain-table">
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>Operator</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>📡 Media Company</td>
+            <td>Operations Partner (+ Founder)</td>
+            <td><span class="badge badge-green">● Active</span></td>
+          </tr>
+          <tr>
+            <td>₿ Investments / Family Office</td>
+            <td>Operations Partner</td>
+            <td><span class="badge badge-green">● Active</span></td>
+          </tr>
+          <tr>
+            <td>⚡ Bitcoin / Non-Profit</td>
+            <td>Founder (unassigned)</td>
+            <td><span class="badge badge-yellow">⚡ Needs Decision</span></td>
+          </tr>
+          <tr>
+            <td>📋 Financial / Legal</td>
+            <td>Fractional CFO (TBD)</td>
+            <td><span class="badge badge-red">🔴 Behind</span></td>
+          </tr>
+          <tr>
+            <td>🏠 Household &amp; Properties</td>
+            <td>House Manager (future hire)</td>
+            <td><span class="badge badge-gray">○ Future Hire</span></td>
+          </tr>
+          <tr>
+            <td>👨‍👩‍👧 Family / Household</td>
+            <td>Executive Assistant + Founder</td>
+            <td><span class="badge badge-green">● Active</span></td>
+          </tr>
+          <tr>
+            <td>💪 Health</td>
+            <td>Founder (self-managed)</td>
+            <td><span class="badge badge-green">● Active</span></td>
+          </tr>
+          <tr>
+            <td>🧠 Personal Development</td>
+            <td>Founder (self-managed)</td>
+            <td><span class="badge badge-green">● Active</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout red" style="margin-top:1.25rem;">
+        <p>🔴 <strong>Financial / Legal is the highest-risk domain.</strong> Taxes behind across all entities — multiple companies + personal. This is a cross-domain Rock that belongs on the Founder's personal quarterly plan, not delegated to any single domain operator. Needs a fractional CFO or dedicated coordinator.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORG & REPLACEMENT LADDER -->
+  <div class="section" id="org">
+    <div class="section-header">
+      <span class="section-icon">🏛️</span>
+      <span class="section-title">Org & Replacement Ladder</span>
+    </div>
+    <div class="section-body">
+      <p>Every seat has a defined scope and clear ceiling. The most expensive gap is visible at a glance.</p>
+
+      <div class="org-card founder">
+        <div class="org-card-title">THE FOUNDER — Capital Allocator & Vision Holder</div>
+        <div class="org-card-sub">Strategy · Capital · Relationships · Network</div>
+        <div class="org-card-note">⚠ Currently filling the CoS seat by default → costs strategy time every day</div>
+      </div>
+
+      <div class="org-connector"></div>
+
+      <div class="org-card empty-seat">
+        <div class="org-card-title" style="color:var(--red);">⚠ EMPTY SEAT — Chief of Staff</div>
+        <div class="org-card-sub" style="color:rgba(255,95,87,.7);">Most expensive vacancy in the org</div>
+        <div class="org-card-note">Owns Citadel OS · Manages EA + Ops Partner · Cross-Domain Rocks<br><br>
+          <strong style="color:#fff;">Hire profile:</strong> Loves chaos. Context-switches fast. Proactively builds systems before fires start. NOT a reactive inbox-manager. High execution, high trust, full Citadel visibility.</div>
+      </div>
+
+      <div style="margin-left:2rem;">
+        <div class="org-connector" style="margin-left:0;"></div>
+
+        <div class="org-card team-member" style="margin-left:0; margin-bottom:.75rem;">
+          <div class="org-card-title">Operations Partner — Portfolio & Venture Ops</div>
+          <div class="org-card-sub">Investments / Family Office · Deal Flow · Portfolio Intelligence</div>
+          <div class="org-card-note">
+            <ul class="check-list" style="margin:0 0 .35rem;">
+              <li>Portfolio intelligence, deal flow, founder ops, family office infrastructure</li>
+            </ul>
+            <ul class="cross-list" style="margin:0;">
+              <li>Not CoS: depth-focused operating mode — the seat needs someone who thrives on breadth</li>
+            </ul>
+            <div style="margin-top:.5rem; color:var(--accent); font-size:.82rem; font-weight:600;">→ Stay in portfolio ops. Scope clearly defined.</div>
+          </div>
+        </div>
+
+        <div class="org-card team-member" style="margin-left:0; margin-bottom:.75rem;">
+          <div class="org-card-title">Executive Assistant — Executive Operations</div>
+          <div class="org-card-sub">Daily Admin Rhythm · Calendar · Inbox · Logistics</div>
+          <div class="org-card-note">
+            Good at execution under clear direction.<br>
+            <div style="margin-top:.5rem; color:var(--accent); font-size:.82rem; font-weight:600;">→ Give them better systems, not more authority. Coordination layer with clear SOPs.</div>
+          </div>
+        </div>
+
+        <div class="org-card team-member" style="margin-left:0; margin-bottom:.75rem; opacity:.7;">
+          <div class="org-card-title">House Manager — <span style="color:var(--muted); font-weight:400;">FUTURE HIRE</span></div>
+          <div class="org-card-sub">Personal — Properties, Household Ops</div>
+          <div class="org-card-note">Multiple properties, family homes, vacation home. Needs a dedicated operator.</div>
+        </div>
+
+        <div class="org-card team-member ai" style="margin-left:0;">
+          <div class="org-card-title">AI Agent — System Design & Infrastructure</div>
+          <div class="org-card-sub">Playbooks · SOPs · Decision Architecture · Sub-Agent Execution</div>
+          <div class="org-card-note">
+            <ul class="check-list" style="margin:0 0 .35rem;">
+              <li>Owns system infrastructure — playbooks, SOPs, decision ledger, tool integration</li>
+            </ul>
+            <ul class="cross-list" style="margin:0;">
+              <li>Can't manage humans. Build infrastructure first, then reliability.</li>
+            </ul>
+            <div style="margin-top:.5rem; color:#7c5cfc; font-size:.82rem; font-weight:600;">→ Build Citadel OS first. Hire CoS into a working system, not a vacuum.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout insight" style="margin-top:1.5rem;">
+        <p>💡 <strong>Key insight:</strong> The role a founder might want one person to fill is often actually <em>two</em> roles: Domain Operator (reactive — deal flow, updates, execution) and Chief of Staff (proactive — building systems before chaos hits). These require fundamentally different operating modes. One person can't do both without one consuming the other.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROCK CASCADE -->
+  <div class="section" id="rocks">
+    <div class="section-header">
+      <span class="section-icon">🪨</span>
+      <span class="section-title">Rock Cascade — Personal → Domain → Team</span>
+    </div>
+    <div class="section-body">
+      <p>Rocks cascade from the Founder's personal quarterly plan down through each domain to individual contributors. <strong>Cross-domain rocks never belong on a team member's plate</strong> — they live at Level 1.</p>
+
+      <div class="rock-level rock-level-1">
+        <div class="rock-level-label">Level 1 — Founder's Personal Rocks · Founder is DRI</div>
+        <div class="rock-level-title">Cross-domain priorities that span multiple entities or life areas</div>
+        <div class="rock-level-body">
+          No single domain operator can hold DRI across their authority boundary. These belong on the Founder's quarterly plan.
+          <ul>
+            <li>Financial Catchup (all entities)</li>
+            <li>CoS Hire</li>
+            <li>Q2 Capital Allocation Plan</li>
+            <li>Health Protocol Reset</li>
+            <li>Non-Profit — Revival or Kill Decision</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cascade-arrow">↓ Founder sets quarterly → cascades to each domain ↓</div>
+
+      <div class="rock-level rock-level-2">
+        <div class="rock-level-label">Level 2 — Domain Rocks (per entity) · Domain Operator is DRI</div>
+        <div class="rock-level-title">3-5 Rocks per domain that support the Founder's personal rocks</div>
+        <div class="rock-level-body">
+          Domain operator owns execution. Stays within their domain's authority boundary.
+          <ul>
+            <li>Media: Q2 Revenue Rock</li>
+            <li>Investments: Portfolio Dashboard Live</li>
+            <li>Family/Household: Launch Initiative</li>
+            <li>Health: Recovery Protocol</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="cascade-arrow">↓ Domain operator delegates → team members execute ↓</div>
+
+      <div class="rock-level rock-level-3">
+        <div class="rock-level-label">Level 3 — Team / Individual Rocks · IC is DRI</div>
+        <div class="rock-level-title">Individual contributor Rocks, scoped to their domain and authority</div>
+        <div class="rock-level-body">
+          Stay within their lane. Status rolls up through domain operator to Founder weekly.
+          <ul>
+            <li>Ops Partner: Cap Table Audit Q2</li>
+            <li>EA: Calendar System Live</li>
+            <li>Ops Partner: Pro-Rata Tracker</li>
+            <li>EA: Inbox Zero Protocol</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout" style="margin-top:1.25rem;">
+        <p>⚠️ <strong>The inversion warning:</strong> "The moment a team member is setting Rocks that span your personal taxes and multiple entities, you've inverted the cascade. That's not their Rock — it's yours."</p>
+      </div>
+      <div class="callout insight" style="margin-top:.75rem;">
+        <p>💡 <strong>"Financial Catchup" is the Founder's Rock, not the Ops Partner's.</strong> The instinct to surface it was correct — that's CoS-level thinking. But the Ops Partner lacks DRI authority across personal taxes + multiple companies + non-profit. The Founder owns it. The Ops Partner can own a component scoped to investments.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CoS SEAT -->
+  <div class="section" id="cos">
+    <div class="section-header">
+      <span class="section-icon">🎯</span>
+      <span class="section-title">The CoS Seat — Gap Analysis</span>
+    </div>
+    <div class="section-body">
+      <div class="callout red">
+        <p>🔴 <strong>The CoS seat is the most expensive vacancy in the Citadel.</strong> The Founder is filling it by default — managing 8 domains, multiple direct reports, cross-domain Rocks, and system design instead of doing strategy and capital allocation.</p>
+      </div>
+
+      <h3>What the CoS Owns</h3>
+      <ul class="check-list">
+        <li>Citadel OS operations — owns the system, keeps it running</li>
+        <li>Manages EA + Operations Partner day-to-day</li>
+        <li>Owns cross-domain Rocks</li>
+        <li>Financial Catchup coordination</li>
+        <li>Weekly rhythm enforcement across all domains</li>
+      </ul>
+
+      <h3>Hire Profile</h3>
+      <ul class="check-list">
+        <li>Loves chaos — doesn't shrink from ambiguity</li>
+        <li>Context-switches as fast as the Founder</li>
+        <li>Proactively builds systems before fires start</li>
+        <li>High execution, high trust, full Citadel visibility</li>
+      </ul>
+      <ul class="cross-list" style="margin-top:.5rem;">
+        <li>NOT a reactive inbox-manager</li>
+        <li>NOT someone who needs stable, single-domain scope</li>
+      </ul>
+
+      <h3>Build First, Then Hire</h3>
+      <p>The AI Agent builds the Citadel OS infrastructure first. CoS walks into a working system — not an undefined "figure it out" mandate where scope collapses under pressure.</p>
+      <p>This is the <strong>vacuum hire warning</strong>: when a role is hired into a vacuum, it gravitates toward whatever inbound pressure is highest (usually the loudest domain), leaving the systems layer permanently unbuilt.</p>
+
+      <h3>The Strategic Question</h3>
+      <p>Can an existing team member grow into CoS, or is this a new hire?</p>
+      <p>An Ops Partner who has been operating in depth-focused mode for 12+ months is likely gravitational — that operating mode will resist a breadth/chaos management role. Their instincts may surface CoS-level insights, but the seat needs someone who <em>thrives</em> on breadth.</p>
+
+      <div class="callout insight">
+        <p>💡 <strong>Recommendation:</strong> Keep Ops Partner in their lane. Hire CoS separately. Fractional CoS is viable as an interim while building trust with a full-time hire.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DAN MARTELL FRAMEWORK -->
+  <div class="section" id="dm">
+    <div class="section-header">
+      <span class="section-icon">⚙️</span>
+      <span class="section-title">Layer 2 — Execution Playbook (Dan Martell Framework)</span>
+    </div>
+    <div class="section-body">
+      <p>The execution engine that runs inside each domain. Synthesized from extensive Elite, Quantum, and Mighty coaching transcripts. This is the full operational playbook — not a summary.</p>
+
+      <div style="background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:1rem 1.5rem; margin:1rem 0; font-family:'SF Mono','Fira Code',Consolas,monospace; font-size:.82rem; color:var(--muted); text-align:center; letter-spacing:.04em;">
+        Vision (25-yr) → Annual Plan → Quarterly Rocks → Weekly Scorecard → Daily Rhythm
+      </div>
+
+      <!-- THE SYSTEM OVERVIEW -->
+      <h3>The System: Idea → Rock → Scorecard → Execution → Completion</h3>
+
+      <div class="dm-step">
+        <div class="dm-step-num">1</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">25-Year Vision → 3-Year → 1-Year Plan</div>
+          <div class="dm-step-desc">Start with a 25-year vision, work backward to a 3-year plan, then a 1-year plan. Get the sequencing right before breaking into quarters.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">2</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Break the annual plan into quarterly Rocks</div>
+          <div class="dm-step-desc">Each quarter gets 3–5 Rocks (ideally 3). These are the big, important items — not day-to-day work — that move things forward.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">3</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Each Rock gets a SMART goal + strategies + tactics + DRI</div>
+          <div class="dm-step-desc">Specific, measurable, attainable, relevant, time-bound. Below the SMART goal are 3–5 strategies and supporting tactics. One person (the DRI) owns each Rock.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">4</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Rocks feed into the weekly scorecard review</div>
+          <div class="dm-step-desc">Each week, the team reviews Rocks as red/green/yellow. The DRI reports status. If red, they explain what's blocked and what they're doing about it.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">5</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Scorecard tracks leading/lagging metrics weekly</div>
+          <div class="dm-step-desc">3–5 metrics per department, updated weekly by the DRI who owns that number. Red (&gt;10% below goal), Yellow (within 10%), Green (at or above).</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">6</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Daily/weekly meetings enforce rhythm</div>
+          <div class="dm-step-desc">Daily admin sync for CEO + assistant. Weekly team sync for scorecard review. Department meetings as needed.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">7</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Systems lock in completed work</div>
+          <div class="dm-step-desc">Once a process is proven, document it (Camcorder Method), turn it into an SOP, and delegate. This "system stacking" frees the CEO to focus on the next Rock.</div>
+        </div>
+      </div>
+
+      <!-- ROCKS SYSTEM -->
+      <h3>Rocks System</h3>
+      <p><strong>What are Rocks?</strong> Big, important projects you plan for <em>first</em> in your calendar — not everyday work. Fill the glass with big rocks before sand/pebbles, or they won't fit.</p>
+
+      <h4>Rock Temple Framework (Tod Melnyk)</h4>
+      <p>Draw a house: peak at top, 3–5 pillars in the middle, base at bottom.</p>
+      <ul class="check-list">
+        <li><strong>Top:</strong> Q metrics/goals (revenue, clients, profit — what you're delivering by end of quarter)</li>
+        <li><strong>Pillars:</strong> The Rocks — each with SMART goal, strategies, tactics, and DRI</li>
+        <li><strong>Base:</strong> Always "Talent &amp; Culture" — you can't execute without great people</li>
+      </ul>
+
+      <h4>Structure of each Rock</h4>
+      <ul class="check-list">
+        <li>SMART goal (e.g., "By March 31, deliver $2M in revenue")</li>
+        <li>3–5 strategies</li>
+        <li>Supporting tactics</li>
+        <li>Monthly milestones (Month 1 target, Month 2 target, Month 3 target)</li>
+        <li>One DRI who is accountable</li>
+      </ul>
+
+      <blockquote>"At the end of the quarter, what would make me sit back and go 'holy fuck, that just clearly changed things from where we were 90 days ago?' If you can't say that about your Rocks, you have too many or the wrong ones."</blockquote>
+
+      <!-- SCORECARD SYSTEM -->
+      <h3>Scorecard System</h3>
+      <p><strong>What it is:</strong> A spreadsheet (or tool like Precision.co) tracking 3–5 metrics per department, updated weekly, reviewed in the weekly team meeting.</p>
+
+      <h4>Rules</h4>
+      <div class="dm-step">
+        <div class="dm-step-num">1</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Every number has a DRI</div>
+          <div class="dm-step-desc">One person owns updating and reporting each metric. They update it themselves to stay connected to the number.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">2</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Colors are mandatory</div>
+          <div class="dm-step-desc">Glance at the sheet, instantly see what's red. No hiding behind averages.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">3</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Goals are negotiated</div>
+          <div class="dm-step-desc">"If I build the plan, they'll fight the plan. If they build the plan, they won't fight the plan." CEO negotiates targets with the team — they propose numbers, CEO pressure-tests.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">4</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">It's public</div>
+          <div class="dm-step-desc">Every team member can see every number. "Sunlight sanitizes."</div>
+        </div>
+      </div>
+
+      <blockquote>"Scorecards don't lie. People respect what you inspect. Great teams want to know the score."</blockquote>
+
+      <!-- SYSTEM STACKING -->
+      <h3>System Stacking</h3>
+      <p><strong>Concept:</strong> Take tasks you're doing repeatedly, document them, and "lock them in" via a person or automation — then stack the next one on top.</p>
+
+      <div style="display:flex; gap:.75rem; align-items:center; margin:1rem 0; flex-wrap:wrap;">
+        <div style="background:rgba(255,95,87,.1); border:1px solid rgba(255,95,87,.25); border-radius:6px; padding:.6rem 1rem; flex:1; min-width:130px; text-align:center;">
+          <div style="font-weight:700; color:var(--red); font-size:.85rem;">BUSY</div>
+          <div style="color:var(--muted); font-size:.78rem; margin-top:.2rem;">40+ things/week, no systems</div>
+        </div>
+        <div style="color:var(--muted);">→</div>
+        <div style="background:rgba(247,147,26,.08); border:1px solid rgba(247,147,26,.25); border-radius:6px; padding:.6rem 1rem; flex:1; min-width:130px; text-align:center;">
+          <div style="font-weight:700; color:var(--accent); font-size:.85rem;">SYSTEM STACK</div>
+          <div style="color:var(--muted); font-size:.78rem; margin-top:.2rem;">One task off your plate per week, forever</div>
+        </div>
+        <div style="color:var(--muted);">→</div>
+        <div style="background:rgba(62,207,142,.08); border:1px solid rgba(62,207,142,.25); border-radius:6px; padding:.6rem 1rem; flex:1; min-width:130px; text-align:center;">
+          <div style="font-weight:700; color:var(--green); font-size:.85rem;">PRODUCTIVE</div>
+          <div style="color:var(--muted); font-size:.78rem; margin-top:.2rem;">Machine runs; you do high-leverage work</div>
+        </div>
+      </div>
+
+      <!-- SAD PROCESS -->
+      <h3>S.A.D. Process — Systemize, Automate, Delegate</h3>
+      <div class="dm-step">
+        <div class="dm-step-num" style="background:rgba(247,147,26,.15); border-color:var(--accent); color:var(--accent);">S</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Systemize</div>
+          <div class="dm-step-desc">Create the system/process — checklist, steps, SOP</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num" style="background:rgba(247,147,26,.15); border-color:var(--accent); color:var(--accent);">A</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Automate</div>
+          <div class="dm-step-desc">Bring in software/AI to handle repetitive parts</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num" style="background:rgba(247,147,26,.15); border-color:var(--accent); color:var(--accent);">D</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Delegate</div>
+          <div class="dm-step-desc">Assign ownership (DRI) to a person. Not just the task — the entire system, automation, scorecard, and accountability.</div>
+        </div>
+      </div>
+      <blockquote>"Delegate isn't a person per se. Delegate is I now have somebody that owns the process. It's about ownership."</blockquote>
+
+      <!-- DRY FRAMEWORK -->
+      <h3>Systems Builder — DRY Framework</h3>
+      <p><strong>DRY (Don't Repeat Yourself):</strong> If you solve a problem, document it so you never solve it again.</p>
+
+      <h4>Three Building Blocks</h4>
+      <div class="dm-step">
+        <div class="dm-step-num">1</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Code (Checklists)</div>
+          <div class="dm-step-desc">The repeatable steps. Like a recipe — follow it, get the result 100% of the time.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">2</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Config Files (Preferences)</div>
+          <div class="dm-step-desc">A document of all personal preferences — shirt size, plane seat, hotel, communication style, calendar rules. Referenced by many checklists. Change it in one place, updates everywhere. A "Working with [Name]" doc every new hire reads.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">3</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Modules (Reusable Processes)</div>
+          <div class="dm-step-desc">A process that multiple departments reference. E.g., "client gifting module" used by Customer Success, Sales, and EA. Write once, reference from many playbooks.</div>
+        </div>
+      </div>
+
+      <h4>Four Components of a Complete System</h4>
+      <ul class="check-list">
+        <li><strong>Steps</strong> — the checklist/process</li>
+        <li><strong>Scorecard</strong> — quality, quantity, and timeline measurements</li>
+        <li><strong>Training</strong> — Camcorder Method recordings + regular drills</li>
+        <li><strong>Owner</strong> — a DRI who owns the whole thing</li>
+      </ul>
+
+      <h4>Belief Blockers</h4>
+      <div style="display:flex; flex-direction:column; gap:.5rem; margin:.75rem 0;">
+        <div style="background:var(--surface-2); border:1px solid var(--border); border-radius:6px; padding:.75rem 1rem;">
+          <span style="color:var(--red); font-weight:700; font-size:.82rem;">"Nobody can do what I do"</span>
+          <span style="color:var(--muted); font-size:.82rem;"> → Document your process and anyone can learn it.</span>
+        </div>
+        <div style="background:var(--surface-2); border:1px solid var(--border); border-radius:6px; padding:.75rem 1rem;">
+          <span style="color:var(--red); font-weight:700; font-size:.82rem;">"They'll mess up"</span>
+          <span style="color:var(--muted); font-size:.82rem;"> → 80% done by someone else is 100% awesome. Dan's team lost $142K from a mistake — he asked "is this a learn once?" and moved on.</span>
+        </div>
+        <div style="background:var(--surface-2); border:1px solid var(--border); border-radius:6px; padding:.75rem 1rem;">
+          <span style="color:var(--red); font-weight:700; font-size:.82rem;">"I can't build systems, I'm a creative"</span>
+          <span style="color:var(--muted); font-size:.82rem;"> → YouTube + help files + 3 hours of focus = you can learn anything.</span>
+        </div>
+        <div style="background:var(--surface-2); border:1px solid var(--border); border-radius:6px; padding:.75rem 1rem;">
+          <span style="color:var(--red); font-weight:700; font-size:.82rem;">"It'll get stale"</span>
+          <span style="color:var(--muted); font-size:.82rem;"> → Keep it simple. The DRI who owns it updates it.</span>
+        </div>
+      </div>
+
+      <!-- CAMCORDER METHOD -->
+      <h3>Camcorder Method</h3>
+      <h4>Phase 1: Capture</h4>
+      <ul class="check-list">
+        <li>Outline the video — write high-level beats</li>
+        <li>Record yourself doing the work — Zoom, share screen, talk through it. You're doing the work anyway, just recording it.</li>
+        <li>Save in a folder — even if you're not ready to delegate yet</li>
+      </ul>
+      <h4>Phase 2: Codify</h4>
+      <ul class="check-list">
+        <li>Transcribe (Rev, Descript, or similar)</li>
+        <li>AI creates the SOP — paste transcript: "Create an SOP using this transcript." Gets it 92% there.</li>
+        <li>Delegate — give the SOP + original video to the person. Video has micro-moments the SOP can't capture.</li>
+      </ul>
+      <h4>Turbo Version</h4>
+      <ul class="check-list">
+        <li><strong>Criteria</strong> — list 5–7 things that must be true for output to be great (Definition of Done)</li>
+        <li><strong>Feedback Form</strong> — scoring rubric (1–5 per criterion)</li>
+        <li><strong>Collect resources</strong> — reference materials, examples, templates</li>
+        <li><strong>Record</strong> — standard Camcorder Method</li>
+        <li><strong>Hand off</strong> — recording + criteria + feedback form + resources</li>
+        <li><strong>They create the SOP</strong> — not you. They watch, draft, Q&amp;A with you, then own it.</li>
+      </ul>
+      <blockquote>"I haven't created a system in years. As soon as I create a system for somebody else's department, I'm doing their job."</blockquote>
+
+      <!-- MEETING CADENCES -->
+      <h3>Meeting Cadences</h3>
+
+      <h4>Daily Admin Sync (Founder + EA)</h4>
+      <div class="dm-step">
+        <div class="dm-step-num">1</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">My List</div>
+          <div class="dm-step-desc">Running document with sections per direct report. Add thoughts as they arise throughout the day.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">2</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Calendar Review</div>
+          <div class="dm-step-desc">Mondays: 6 weeks forward. Rest of week: 2 weeks forward.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">3</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Review Folder</div>
+          <div class="dm-step-desc">Emails needing Founder decision. Founder reviews and decides.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">4</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Past Meetings</div>
+          <div class="dm-step-desc">EA goes through every meeting since last sync. "You talked to X — anything to do there?" Founder never thinks about follow-up.</div>
+        </div>
+      </div>
+      <div class="dm-step">
+        <div class="dm-step-num">5</div>
+        <div class="dm-step-content">
+          <div class="dm-step-title">Project Updates</div>
+          <div class="dm-step-desc">EA updates on things they're managing.</div>
+        </div>
+      </div>
+      <p style="margin-top:.75rem;"><strong>Key rule:</strong> EA runs the meeting, not the Founder. "I don't like to run meetings. I like to participate in meetings."</p>
+
+      <h4>Weekly Leadership Sync (Whole Team)</h4>
+      <ul class="check-list">
+        <li><strong>Wins</strong> — share team/personal wins</li>
+        <li><strong>Scorecard Review</strong> — each DRI reports their numbers (red/green/yellow)</li>
+        <li><strong>Rock Review</strong> — each Rock DRI reports status, identifies blockers</li>
+        <li><strong>Customer Wins / Headlines</strong> — company updates, notable stories</li>
+        <li><strong>Issues</strong> — anyone can add items; team works through them</li>
+        <li><strong>Updates</strong> — personal progress, project updates, things learned</li>
+      </ul>
+
+      <!-- CEO ROLES -->
+      <h3>CEO vs Team Roles</h3>
+      <h4>The CEO's Four Areas</h4>
+      <ul class="check-list">
+        <li><strong>People</strong> — hiring, developing, coaching</li>
+        <li><strong>Reporting</strong> — scorecard, metrics, knowing the numbers</li>
+        <li><strong>Strategy</strong> — vision, Rocks, sequencing</li>
+        <li><strong>Systems</strong> — overseeing the playbooks, processes, culture</li>
+      </ul>
+      <p><strong>The 80/10 Rule:</strong> CEO does the first 10% (creative direction) and the final 10% (review/approval). Team does the 80% in between.</p>
+      <h4>What the CEO does NOT do</h4>
+      <ul class="cross-list">
+        <li>Create systems (team creates, CEO reviews)</li>
+        <li>Run meetings (assistant or team leads run them)</li>
+        <li>Answer day-to-day operational questions</li>
+        <li>Manage people minute-to-minute</li>
+        <li>Own more than 5 direct reports (7 max)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TOOL STACK -->
+  <div class="section" id="tools">
+    <div class="section-header">
+      <span class="section-icon">🛠️</span>
+      <span class="section-title">Tool Stack — Decision Framework</span>
+    </div>
+    <div class="section-body">
+      <p><strong>Recommended Approach (Option D):</strong> Unified System of Record + Scorecard Rhythm. Single tool everyone uses for project visibility and durability. Weekly accountability rhythm layered on top.</p>
+      <p>This approach survives the "what if someone leaves?" challenge — handoff-readiness requires a unified system of record, not siloed tools.</p>
+
+      <table class="tool-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Recommendation</th>
+            <th>Est. Cost/mo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Project Management / System of Record</td>
+            <td><strong>Linear</strong> (Business) — best PM API for AI agent integration (GraphQL)</td>
+            <td>~$80</td>
+          </tr>
+          <tr>
+            <td>Communication</td>
+            <td><strong>Slack</strong> (Pro)</td>
+            <td>~$45</td>
+          </tr>
+          <tr>
+            <td>Knowledge Base</td>
+            <td><strong>Outline</strong> (self-hosted)</td>
+            <td>$0</td>
+          </tr>
+          <tr>
+            <td>Credentials</td>
+            <td><strong>1Password</strong> (keep existing)</td>
+            <td>~$20</td>
+          </tr>
+          <tr>
+            <td>Version Control</td>
+            <td><strong>GitHub</strong> (keep existing)</td>
+            <td>$0</td>
+          </tr>
+          <tr>
+            <td>Portfolio / CRM</td>
+            <td><strong>Airtable</strong> (Team) — simpler, proven, good API</td>
+            <td>~$50</td>
+          </tr>
+          <tr>
+            <td>Calendar</td>
+            <td><strong>Cal.com</strong> (self-hosted)</td>
+            <td>$0</td>
+          </tr>
+          <tr>
+            <td><strong>Total estimated</strong></td>
+            <td></td>
+            <td><strong>~$195/mo</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout insight" style="margin-top:1.25rem;">
+        <p>💡 The AI Agent acts as the integration layer — humans touch 2-3 tools, the AI connects them all. Choose simpler tools with good APIs over powerful tools with high configuration overhead. Complexity is the enemy of adoption.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MILESTONES -->
+  <div class="section" id="milestones">
+    <div class="section-header">
+      <span class="section-icon">🚩</span>
+      <span class="section-title">Milestones</span>
+    </div>
+    <div class="section-body">
+      <div class="milestone-row">
+        <div class="milestone-status">✅</div>
+        <div class="milestone-content">
+          <div class="milestone-title">Research + Framework Selection</div>
+          <div class="milestone-dri">DRI: AI Agent</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-status">✅</div>
+        <div class="milestone-content">
+          <div class="milestone-title">Tool Stack Evaluation (7 categories, 20+ tools)</div>
+          <div class="milestone-dri">DRI: AI Agent</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-status">✅</div>
+        <div class="milestone-content">
+          <div class="milestone-title">System of Record Decision (Option D confirmed)</div>
+          <div class="milestone-dri">DRI: Founder</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-status">✅</div>
+        <div class="milestone-content">
+          <div class="milestone-title">Citadel OS Blueprint v2 — Life OS Architecture</div>
+          <div class="milestone-dri">DRI: AI Agent</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-status">⚡</div>
+        <div class="milestone-content">
+          <div class="milestone-title">Tool Stack Decision — confirm and activate</div>
+          <div class="milestone-dri">DRI: Founder</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-status">○</div>
+        <div class="milestone-content">
+          <div class="milestone-title">SLA + Q2 Rock Temple Exercise</div>
+          <div class="milestone-dri">DRI: Founder + AI Agent — together exercise</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-status">○</div>
+        <div class="milestone-content">
+          <div class="milestone-title">Scorecard + Weekly Rhythm Live</div>
+          <div class="milestone-dri">DRI: AI Agent</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-status">○</div>
+        <div class="milestone-content">
+          <div class="milestone-title">CoS Role Profile + Hiring Brief</div>
+          <div class="milestone-dri">DRI: Founder + AI Agent</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-status">○</div>
+        <div class="milestone-content">
+          <div class="milestone-title">Team Onboarded to Rhythm (EA + Ops Partner)</div>
+          <div class="milestone-dri">DRI: Founder</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-status">○</div>
+        <div class="milestone-content">
+          <div class="milestone-title">Domain Scorecard — All 8 Domains Instrumented</div>
+          <div class="milestone-dri">DRI: AI Agent</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-status">○</div>
+        <div class="milestone-content">
+          <div class="milestone-title">Full Tool Migration</div>
+          <div class="milestone-dri">DRI: AI Agent · 4-phase, ~6 weeks</div>
+        </div>
+      </div>
+      <div class="milestone-row">
+        <div class="milestone-status">○</div>
+        <div class="milestone-content">
+          <div class="milestone-title">AI Handoff Protocol</div>
+          <div class="milestone-dri">DRI: AI Agent · AI → sub-agents → future instances</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PITFALLS -->
+  <div class="section" id="pitfalls">
+    <div class="section-header">
+      <span class="section-icon">⚠️</span>
+      <span class="section-title">Pitfalls & Design Principles</span>
+    </div>
+    <div class="section-body">
+      <p>These are anti-patterns the system must be designed to make impossible.</p>
+
+      <div class="pitfall-card">
+        <div class="pitfall-icon">🎛️</div>
+        <div class="pitfall-content">
+          <div class="pitfall-title">Don't micromanage how people track their own tasks</div>
+          <div class="pitfall-desc">The system tracks outcomes and scorecard metrics — not how individuals organize their work.</div>
+        </div>
+      </div>
+      <div class="pitfall-card">
+        <div class="pitfall-icon">🔬</div>
+        <div class="pitfall-content">
+          <div class="pitfall-title">Don't build visibility into minutia that won't provide value</div>
+          <div class="pitfall-desc">Scorecard items must be meaningful. If the Founder doesn't care about a number, it's not on the scorecard.</div>
+        </div>
+      </div>
+      <div class="pitfall-card">
+        <div class="pitfall-icon">😐</div>
+        <div class="pitfall-content">
+          <div class="pitfall-title">Don't be paralyzed by scale and scope</div>
+          <div class="pitfall-desc">Start with one domain running the rhythm. Stack the next one on top. System Stacking, not System Designing.</div>
+        </div>
+      </div>
+      <div class="pitfall-card">
+        <div class="pitfall-icon">🤖</div>
+        <div class="pitfall-content">
+          <div class="pitfall-title">Don't be paralyzed by the complexity of partnering with AI</div>
+          <div class="pitfall-desc">The AI Agent owns the system. The Founder calls the plays. Keep the human/AI boundary clear and trust the files.</div>
+        </div>
+      </div>
+      <div class="pitfall-card">
+        <div class="pitfall-icon">⏱️</div>
+        <div class="pitfall-content">
+          <div class="pitfall-title">Don't spend 3 days on a playbook playbook</div>
+          <div class="pitfall-desc">The Founder cannot be the bottleneck. If building a system takes longer than using it, stop and ship something shippable.</div>
+        </div>
+      </div>
+      <div class="pitfall-card">
+        <div class="pitfall-icon">📈</div>
+        <div class="pitfall-content">
+          <div class="pitfall-title">The system must scale from simple to complex</div>
+          <div class="pitfall-desc">Works for workspace cleanup on day 1 AND a full family office portfolio on day 100. Design for both ends.</div>
+        </div>
+      </div>
+      <div class="pitfall-card">
+        <div class="pitfall-icon">🔄</div>
+        <div class="pitfall-content">
+          <div class="pitfall-title">Don't hire into a vacuum (the Vacuum Hire pattern)</div>
+          <div class="pitfall-desc">Build Citadel OS infrastructure first. CoS walks into a working system with defined scope — not an undefined "figure it out" mandate.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DECISION LOG -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">📝</span>
+      <span class="section-title">Decision Log — System of Record</span>
+    </div>
+    <div class="section-body">
+      <p><strong>Problem:</strong> No operating system. 6+ tools, multiple people, zero visibility, no handoff standard.</p>
+
+      <h3>Options Evaluated</h3>
+      <div class="decision-option unchosen">
+        <span class="option-label unchosen">A</span>
+        <div class="option-text"><strong>All-in on one PM tool</strong> — HIGH RISK. Tool wasn't the problem; organizational behavior was. Fails without system culture change.</div>
+      </div>
+      <div class="decision-option unchosen">
+        <span class="option-label unchosen">B</span>
+        <div class="option-text"><strong>Hub-and-spoke scorecard</strong> — LOW RISK but insufficient. Solves visibility, not durability or handoffs.</div>
+      </div>
+      <div class="decision-option unchosen">
+        <span class="option-label unchosen">C</span>
+        <div class="option-text"><strong>Build custom AI-native system</strong> — HIGH RISK. Premature. Building PM tool instead of running projects.</div>
+      </div>
+      <div class="decision-option chosen">
+        <span class="option-label chosen">D ✓</span>
+        <div class="option-text"><strong>Unified system of record + scorecard rhythm</strong> — CHOSEN. Both a single system of record (durability, handoffs) AND a scorecard rhythm (visibility, accountability). Tool choice is a separate evaluation.</div>
+      </div>
+
+      <div class="callout insight" style="margin-top:1.25rem;">
+        <p>💡 <strong>The key pushback that elevated the decision:</strong> "If someone leaves, their silo goes with them. What if we need to replace anyone?" This requirement — handoff-readiness — elevated from "just visibility" to "unified system of record."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p><strong>Citadel OS — Framework v2.0</strong> · March 2026</p>
+    <p>A life-wide operating system for Bitcoin-focused founders running family offices.</p>
+    <p style="margin-top:.5rem;">Framework built on the Dan Martell SaaS coaching methodology · Adapted for multi-domain founder operating context</p>
+  </div>
+
+</div>
+</body>
+</html>
