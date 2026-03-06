@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenClaw Memory Enhancement — Sovereign Stack Analysis (March 2026)</title>
+<style>
+  :root {
+    --bg:       #0d0f14;
+    --surface:  #141820;
+    --surface2: #1a2030;
+    --border:   #2a3040;
+    --orange:   #f7931a;
+    --orange2:  #d97b0e;
+    --green:    #27ae60;
+    --red:      #e74c3c;
+    --yellow:   #f39c12;
+    --text:     #e8eaf0;
+    --muted:    #7a8294;
+    --code:     #c0c8d8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    padding: 0 16px;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 0 80px;
+  }
+
+  /* ── Header ── */
+  .header {
+    border-bottom: 2px solid var(--orange);
+    padding-bottom: 28px;
+    margin-bottom: 40px;
+  }
+  .header-meta {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 12px;
+  }
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  h1 span { color: var(--orange); }
+  .header-sub {
+    font-size: 1rem;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ── Section headings ── */
+  h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--orange);
+    margin: 48px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2 .badge-new {
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--orange);
+    color: #000;
+    padding: 2px 7px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 24px 0 10px;
+  }
+
+  /* ── Executive Summary ── */
+  .exec-summary {
+    background: var(--surface);
+    border: 1px solid var(--orange);
+    border-radius: 8px;
+    padding: 28px;
+    margin-bottom: 40px;
+  }
+  .exec-summary h2 {
+    margin-top: 0;
+    border: none;
+    padding: 0;
+    margin-bottom: 16px;
+  }
+  .verdict-box {
+    background: var(--surface2);
+    border-left: 4px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 1.05rem;
+  }
+  .verdict-box .verdict-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+
+  /* ── Callout boxes ── */
+  .callout {
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 0.9rem;
+  }
+  .callout-warning { background: rgba(247,147,26,0.1); border-left: 3px solid var(--orange); }
+  .callout-danger  { background: rgba(231,76,60,0.1);  border-left: 3px solid var(--red); }
+  .callout-good    { background: rgba(39,174,96,0.1);  border-left: 3px solid var(--green); }
+  .callout-info    { background: rgba(122,130,148,0.1); border-left: 3px solid var(--muted); }
+
+  /* ── Scoring legend ── */
+  .scoring-legend {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 16px 0 28px;
+  }
+  .scoring-legend .leg-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .leg-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+
+  /* ── Comparison Matrix Table ── */
+  .matrix-wrapper {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin: 20px 0 40px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead tr {
+    background: var(--surface2);
+    border-bottom: 2px solid var(--border);
+  }
+  thead th {
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+  }
+  thead th:first-child { color: var(--text); }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  tbody tr:hover { background: var(--surface); }
+  tbody tr.row-highlight { background: rgba(247,147,26,0.06); }
+  tbody tr.row-baseline { background: rgba(122,130,148,0.06); }
+  tbody td {
+    padding: 10px 14px;
+    vertical-align: middle;
+  }
+  td.option-name {
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+  }
+  td.option-name .tag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 5px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 5px;
+    vertical-align: middle;
+  }
+  .tag-new    { background: rgba(247,147,26,0.2); color: var(--orange); border: 1px solid var(--orange); }
+  .tag-base   { background: rgba(122,130,148,0.2); color: var(--muted);  border: 1px solid var(--muted); }
+  .tag-hot    { background: rgba(231,76,60,0.2);  color: var(--red);   border: 1px solid var(--red); }
+  .tag-rec    { background: rgba(39,174,96,0.2);  color: var(--green); border: 1px solid var(--green); }
+
+  /* Score bar */
+  .score-cell {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .score-num {
+    font-weight: 700;
+    font-size: 13px;
+    width: 24px;
+    text-align: right;
+  }
+  .score-bar-wrap {
+    flex: 1;
+    background: var(--border);
+    border-radius: 2px;
+    height: 6px;
+    min-width: 60px;
+    max-width: 80px;
+  }
+  .score-bar {
+    height: 100%;
+    border-radius: 2px;
+  }
+
+  .overall-score {
+    font-weight: 800;
+    font-size: 15px;
+  }
+
+  /* ── Option cards ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 20px;
+    margin: 20px 0 40px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: var(--muted); }
+  .card.card-top { border-color: var(--orange); }
+  .card.card-avoid { border-color: var(--border); opacity: 0.8; }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .card-title .card-tag { margin-left: 5px; }
+  .card-rank {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--orange);
+    white-space: nowrap;
+    opacity: 0.7;
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 14px;
+    line-height: 1.55;
+  }
+
+  .card-scores {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+    font-size: 12px;
+  }
+  .cs-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .cs-label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .cs-value { font-weight: 700; }
+
+  .card-pros, .card-cons {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  .card-pros .ph { color: var(--green); font-weight: 700; margin-bottom: 4px; }
+  .card-cons .ph { color: var(--red);   font-weight: 700; margin-bottom: 4px; }
+  .card-pros li, .card-cons li { margin-left: 16px; margin-bottom: 3px; color: var(--text); }
+
+  .card-verdict {
+    margin-top: 12px;
+    padding: 10px;
+    background: var(--surface2);
+    border-radius: 5px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .card-verdict strong { color: var(--text); }
+
+  /* ── Whats New ── */
+  .whats-new-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+    margin: 16px 0 32px;
+  }
+  .wn-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+  .wn-date { font-size: 10px; color: var(--orange); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .wn-source { font-size: 10px; color: var(--muted); margin-bottom: 6px; }
+  .wn-text { color: var(--text); line-height: 1.5; }
+
+  /* ── Sources ── */
+  .sources-list {
+    font-size: 12px;
+    color: var(--muted);
+    column-count: 2;
+    column-gap: 24px;
+  }
+  .sources-list li {
+    margin-left: 14px;
+    margin-bottom: 5px;
+    break-inside: avoid;
+  }
+  .sources-list a { color: var(--orange); text-decoration: none; }
+  .sources-list a:hover { text-decoration: underline; }
+
+  /* ── Recommendation section ── */
+  .rec-phases {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin: 16px 0 32px;
+  }
+  .rec-phase {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .phase-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+  .phase-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .phase-items {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .phase-items li { margin-left: 16px; margin-bottom: 4px; color: var(--text); }
+  .phase-items li span { color: var(--muted); }
+
+  /* ── Footer ── */
+  footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  footer a { color: var(--orange); text-decoration: none; }
+
+  /* Color helpers */
+  .orange { color: var(--orange); }
+  .green  { color: var(--green); }
+  .red    { color: var(--red); }
+  .muted  { color: var(--muted); }
+
+  /* Score color scale */
+  .s1  { color: var(--red);    }
+  .s2  { color: var(--red);    }
+  .s3  { color: #e67e22;       }
+  .s4  { color: #e67e22;       }
+  .s5  { color: var(--yellow); }
+  .s6  { color: var(--yellow); }
+  .s7  { color: #a8d8a8;       }
+  .s8  { color: var(--green);  }
+  .s9  { color: var(--green);  }
+  .s10 { color: var(--green);  }
+
+  .bar-danger  { background: var(--red);    }
+  .bar-warn    { background: var(--yellow); }
+  .bar-ok      { background: #a8d8a8;       }
+  .bar-good    { background: var(--green);  }
+  .bar-orange  { background: var(--orange); }
+
+  @media (max-width: 640px) {
+    h1 { font-size: 1.6rem; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .sources-list { column-count: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ── Header ── -->
+  <div class="header">
+    <div class="header-meta">OpenClaw Research · Memory Enhancement Comparison · March 2026</div>
+    <h1>OpenClaw <span>Memory</span> Enhancement</h1>
+    <h1 style="font-size:1.1rem; font-weight:400; color:var(--muted); margin-top:6px;">Sovereign Stack Analysis for the Bitcoin-Focused Founder</h1>
+    <div class="header-sub">
+      Synthesizes Feb 22, 2026 deep-dive + March 2026 community pulse (Reddit, X, HN) &nbsp;·&nbsp; 15 options ranked &nbsp;·&nbsp; Updated March 6, 2026
+    </div>
+  </div>
+
+  <!-- ── Executive Summary ── -->
+  <div class="exec-summary">
+    <h2>⚡ Executive Verdict</h2>
+
+    <div class="verdict-box">
+      <div class="verdict-label">🥇 Immediate Win (This Week)</div>
+      <strong>Turn on OpenClaw's built-in hybrid search + temporal decay.</strong> @Voxyz_ai (76 likes, March 3) reported "80% of memory problems gone" just by enabling it. Zero new dependencies. Zero new code. Already on your machine. Check it first.
+    </div>
+
+    <div class="verdict-box">
+      <div class="verdict-label">🥈 30-Day Enhancement (Lowest Risk)</div>
+      <strong>Enhanced Flat Files (Option A from Feb 22).</strong> Add priority tiers (🔴/🟡/🟢) to MEMORY.md, create a vault-index, implement budget-aware context loading. Score: 8.35/10 weighted. Fully reversible. Zero deps. This alone beats most complex alternatives.
+    </div>
+
+    <div class="verdict-box">
+      <div class="verdict-label">🥉 Best External Option (If You Must Add One)</div>
+      <strong>Engram (Go binary).</strong> 336 stars, single binary, SQLite + FTS5, no cloud deps, Homebrew install. Best sovereignty score (9/10) of any external tool. Lowest footgun risk (3/10). Not human-browsable like markdown, but rock-solid for agent retrieval.
+    </div>
+
+    <div class="callout callout-warning">
+      <strong>⚠️ The Trap:</strong> Most community excitement is around tools that require OpenAI API keys, Python + vector DBs, or persistent server processes. For a sovereignty-first stack, the best memory upgrade is the one you already own. Don't add a Neo4j server to your Mac mini to solve a problem that priority-tagged markdown can solve.
+    </div>
+
+    <div class="callout callout-danger">
+      <strong>🚨 Do Not Touch openclaw.json.</strong> 6+ gateway crashes from config changes. Any option requiring openclaw.json edits gets a Footgun Risk penalty. Enabling built-in features via normal operation is the exception.
+    </div>
+
+    <p style="margin-top:16px; font-size:13px; color:var(--muted);">
+      <strong style="color:var(--text);">Confidence:</strong> 80% on the Enhanced Flat Files + built-in hybrid search path. ClawVault remains the best long-term external option (Feb 22 finding unchanged), but it's still young and unvalidated at scale. Engram (Go) is the safe external alternative. Everything else in the community pulse is either too new, too cloud-dependent, or too complex to justify for a sovereign setup.
+    </p>
+  </div>
+
+  <!-- ── Scoring Legend ── -->
+  <h2>📊 How We Scored</h2>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:12px;">
+    Weighted composite. Higher = better. Bitcoiner Values and Memory Quality weight 30% each. Difficulty and Footgun Risk are inverted (lower raw score = better outcome) and weight 20% each.
+  </p>
+  <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px; margin-bottom:8px;">
+    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:14px; font-size:13px;">
+      <div><span class="orange">₿ Bitcoiner Values (×0.30)</span><br><span class="muted">Self-hosted. Local-first. Open source. No OpenAI dep. No vendor lock-in. Data sovereignty.</span></div>
+      <div><span class="orange">🧠 Memory Quality (×0.30)</span><br><span class="muted">Retrieval quality, context relevance, benchmark scores, human-browsable, agent-retrievable.</span></div>
+      <div><span class="orange">⚙️ Difficulty (inverted ×0.20)</span><br><span class="muted">Lower raw score = easier. Install complexity, maintenance, deps, infra requirements.</span></div>
+      <div><span class="orange">💥 Footgun Risk (inverted ×0.20)</span><br><span class="muted">Lower raw score = safer. Data loss, crashes, solo-dev deps, dead projects, API churn.</span></div>
+    </div>
+  </div>
+  <p style="font-size:12px; color:var(--muted); margin-bottom:8px;"><strong style="color:var(--text);">Formula:</strong> Score = (BV × 0.3) + (MQ × 0.3) + ((10 - D) × 0.2) + ((10 - F) × 0.2)</p>
+
+  <!-- ── Comparison Matrix ── -->
+  <h2>📋 Full Comparison Matrix</h2>
+  <div class="matrix-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width:200px">Option</th>
+          <th title="Bitcoiner Values">₿ Values</th>
+          <th title="Difficulty (lower=easier)">⚙️ Difficulty</th>
+          <th title="Footgun Risk (lower=safer)">💥 Footgun</th>
+          <th title="Memory Quality">🧠 Quality</th>
+          <th title="Weighted Score">Overall</th>
+          <th style="min-width:160px">Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Row 1: Built-in Hybrid Search -->
+        <tr class="row-highlight">
+          <td class="option-name">OpenClaw Built-in Hybrid<span class="tag tag-new">NEW</span></td>
+          <td><div class="score-cell"><span class="score-num s9">9</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:90%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s2">2</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:20%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s2">2</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:20%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:70%"></div></div></div></td>
+          <td><span class="overall-score orange">8.10</span></td>
+          <td style="font-size:12px; color:var(--green);">Try first. Zero deps.</td>
+        </tr>
+        <!-- Row 2: Enhanced Flat Files -->
+        <tr class="row-highlight">
+          <td class="option-name">Enhanced Flat Files<span class="tag tag-rec">RECOMMENDED</span></td>
+          <td><div class="score-cell"><span class="score-num s10">10</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:100%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s2">2</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:20%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s1">1</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:10%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">6.5</span><div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:65%"></div></div></div></td>
+          <td><span class="overall-score orange">8.35</span></td>
+          <td style="font-size:12px; color:var(--green);">Do this now. No risk.</td>
+        </tr>
+        <!-- Row 3: Hand-rolled (baseline) -->
+        <tr class="row-baseline">
+          <td class="option-name">Hand-rolled Flat Files<span class="tag tag-base">BASELINE</span></td>
+          <td><div class="score-cell"><span class="score-num s10">10</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:100%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s2">2</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:20%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s1">1</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:10%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s5">5</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:50%"></div></div></div></td>
+          <td><span class="overall-score" style="color:var(--muted);">7.90</span></td>
+          <td style="font-size:12px; color:var(--muted);">Current. It works.</td>
+        </tr>
+        <!-- Row 4: Engram Go -->
+        <tr>
+          <td class="option-name">Engram (Go binary)</td>
+          <td><div class="score-cell"><span class="score-num s9">9</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:90%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s3">3</span><div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:30%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s3">3</span><div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:30%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:70%"></div></div></div></td>
+          <td><span class="overall-score" style="color:#a8d8a8;">7.60</span></td>
+          <td style="font-size:12px; color:#a8d8a8;">Best external option.</td>
+        </tr>
+        <!-- Row 5: ClawVault -->
+        <tr>
+          <td class="option-name">ClawVault (Versatly)</td>
+          <td><div class="score-cell"><span class="score-num s8">8</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:80%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s5">5</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:50%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s6">6</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:60%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s8">8</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:80%"></div></div></div></td>
+          <td><span class="overall-score" style="color:var(--yellow);">6.60</span></td>
+          <td style="font-size:12px; color:var(--yellow);">Best long-term. Wait 60d.</td>
+        </tr>
+        <!-- Row 6: Memento -->
+        <tr>
+          <td class="option-name">Memento<span class="tag tag-new">NEW</span></td>
+          <td><div class="score-cell"><span class="score-num s8">8</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:80%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s3">3</span><div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:30%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:70%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s6">6</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:60%"></div></div></div></td>
+          <td><span class="overall-score" style="color:var(--yellow);">6.20</span></td>
+          <td style="font-size:12px; color:var(--yellow);">Watch. Too new to trust yet.</td>
+        </tr>
+        <!-- Row 7: openclaw-engram -->
+        <tr>
+          <td class="option-name">openclaw-engram</td>
+          <td><div class="score-cell"><span class="score-num s5">5</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:50%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s5">5</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:50%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:70%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s8">8</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:80%"></div></div></div></td>
+          <td><span class="overall-score" style="color:#e67e22;">5.50</span></td>
+          <td style="font-size:12px; color:#e67e22;">OpenAI dep. Skip.</td>
+        </tr>
+        <!-- Row 8: Mem0 OSS -->
+        <tr>
+          <td class="option-name">Mem0 OSS (self-hosted)</td>
+          <td><div class="score-cell"><span class="score-num s4">4</span><div class="score-bar-wrap"><div class="score-bar bar-danger" style="width:40%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:70%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s5">5</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:50%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s9">9</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:90%"></div></div></div></td>
+          <td><span class="overall-score" style="color:#e67e22;">5.50</span></td>
+          <td style="font-size:12px; color:#e67e22;">Best quality. Worst values.</td>
+        </tr>
+        <!-- Row 9: memelord -->
+        <tr>
+          <td class="option-name">memelord (RL memory)<span class="tag tag-new">NEW</span></td>
+          <td><div class="score-cell"><span class="score-num s6">6</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:60%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s6">6</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:60%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s6">6</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:60%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:70%"></div></div></div></td>
+          <td><span class="overall-score" style="color:#e67e22;">5.50</span></td>
+          <td style="font-size:12px; color:#e67e22;">Interesting. Unproven.</td>
+        </tr>
+        <!-- Row 10: OpenMind -->
+        <tr>
+          <td class="option-name">OpenMind (visualization)<span class="tag tag-new">NEW</span></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:70%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s5">5</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:50%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:70%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s6">6</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:60%"></div></div></div></td>
+          <td><span class="overall-score" style="color:#e67e22;">5.50</span></td>
+          <td style="font-size:12px; color:#e67e22);">Visualization only. Watch.</td>
+        </tr>
+        <!-- Row 11: RAG pgvector -->
+        <tr>
+          <td class="option-name">RAG + PostgreSQL pgvector<span class="tag tag-hot">HOT</span></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:70%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s8">8</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:80%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s6">6</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:60%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:70%"></div></div></div></td>
+          <td><span class="overall-score" style="color:#e67e22;">5.40</span></td>
+          <td style="font-size:12px; color:#e67e22;">Complex. Always-on server.</td>
+        </tr>
+        <!-- Row 12: Cortex -->
+        <tr>
+          <td class="option-name">Cortex (prem-research)</td>
+          <td><div class="score-cell"><span class="score-num s6">6</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:60%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:70%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s6">6</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:60%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:70%"></div></div></div></td>
+          <td><span class="overall-score" style="color:#e67e22;">5.30</span></td>
+          <td style="font-size:12px; color:#e67e22;">Python hell. Skip.</td>
+        </tr>
+        <!-- Row 13: Neutron -->
+        <tr>
+          <td class="option-name">Neutron<span class="tag tag-new">NEW</span></td>
+          <td><div class="score-cell"><span class="score-num s6">6</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:60%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s5">5</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:50%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s8">8</span><div class="score-bar-wrap"><div class="score-bar bar-danger" style="width:80%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s6">6</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:60%"></div></div></div></td>
+          <td><span class="overall-score" style="color:var(--red);">5.00</span></td>
+          <td style="font-size:12px; color:var(--red);">1 tweet. Way too early.</td>
+        </tr>
+        <!-- Row 14: Neo4j -->
+        <tr>
+          <td class="option-name">Neo4j Graph + Markdown</td>
+          <td><div class="score-cell"><span class="score-num s6">6</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:60%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s9">9</span><div class="score-bar-wrap"><div class="score-bar bar-danger" style="width:90%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:70%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s8">8</span><div class="score-bar-wrap"><div class="score-bar bar-good" style="width:80%"></div></div></div></td>
+          <td><span class="overall-score" style="color:var(--red);">5.00</span></td>
+          <td style="font-size:12px; color:var(--red);">Infra nightmare. No.</td>
+        </tr>
+        <!-- Row 15: Spark -->
+        <tr>
+          <td class="option-name">Spark (meta_alchemist)<span class="tag tag-new">NEW</span></td>
+          <td><div class="score-cell"><span class="score-num s5">5</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:50%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:70%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-warn" style="width:70%"></div></div></div></td>
+          <td><div class="score-cell"><span class="score-num s7">7</span><div class="score-bar-wrap"><div class="score-bar bar-ok" style="width:70%"></div></div></div></td>
+          <td><span class="overall-score" style="color:var(--red);">4.80</span></td>
+          <td style="font-size:12px; color:var(--red);">Speculative. Skip.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Option Cards ── -->
+  <h2>🃏 Option Deep-Dives</h2>
+
+  <div class="cards-grid">
+
+    <!-- Card 1: OpenClaw Built-in -->
+    <div class="card card-top">
+      <div class="card-header">
+        <div>
+          <div class="card-title">OpenClaw Built-in Hybrid Search + Temporal Decay <span class="tag tag-new card-tag">NEWLY DISCOVERED</span></div>
+        </div>
+        <div class="card-rank">#1</div>
+      </div>
+      <div class="card-desc">
+        Already in your OpenClaw install. Community reports 80% reduction in memory problems after enabling. No new code, no new dependencies, no config changes — just proper use of built-in features.
+      </div>
+      <div class="card-scores">
+        <div class="cs-item"><span class="cs-label">₿ Values</span><span class="cs-value s9">9/10</span></div>
+        <div class="cs-item"><span class="cs-label">⚙️ Difficulty</span><span class="cs-value s2">2/10 (easy)</span></div>
+        <div class="cs-item"><span class="cs-label">💥 Footgun</span><span class="cs-value s2">2/10 (safe)</span></div>
+        <div class="cs-item"><span class="cs-label">🧠 Quality</span><span class="cs-value s7">7/10</span></div>
+      </div>
+      <ul class="card-pros"><div class="ph">✅ Pros</div>
+        <li>Zero new infrastructure or dependencies</li>
+        <li>Already installed — just enable it</li>
+        <li>Community-validated: 80% improvement reported</li>
+        <li>No openclaw.json edits required</li>
+        <li>Temporal decay prevents stale context injection</li>
+      </ul>
+      <ul class="card-cons"><div class="ph">⚠️ Cons</div>
+        <li>Feature scope unclear — may not be a full memory system</li>
+        <li>Limited documentation found; requires exploration</li>
+        <li>Doesn't replace structured long-term memory</li>
+      </ul>
+      <div class="card-verdict"><strong>Action:</strong> Investigate and enable before doing anything else. @Voxyz_ai (March 3, 76 likes): "turned on openclaw's built-in hybrid search and temporal decay. 80% of the problems gone."</div>
+    </div>
+
+    <!-- Card 2: Enhanced Flat Files -->
+    <div class="card card-top">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Enhanced Flat Files <span class="tag tag-rec card-tag">RECOMMENDED</span></div>
+        </div>
+        <div class="card-rank">#2</div>
+      </div>
+      <div class="card-desc">
+        Cherry-pick the best patterns from ClawVault into our existing markdown system. Priority tiers on MEMORY.md, vault index, and budget-aware context loading. Zero new dependencies. The @jordymaui "3 files fix" community approach validates this direction (Feb 26).
+      </div>
+      <div class="card-scores">
+        <div class="cs-item"><span class="cs-label">₿ Values</span><span class="cs-value s10">10/10</span></div>
+        <div class="cs-item"><span class="cs-label">⚙️ Difficulty</span><span class="cs-value s2">2/10 (easy)</span></div>
+        <div class="cs-item"><span class="cs-label">💥 Footgun</span><span class="cs-value s1">1/10 (safest)</span></div>
+        <div class="cs-item"><span class="cs-label">🧠 Quality</span><span class="cs-value s7">6.5/10</span></div>
+      </div>
+      <ul class="card-pros"><div class="ph">✅ Pros</div>
+        <li>No new dependencies whatsoever</li>
+        <li>Highest sovereignty score possible (10/10)</li>
+        <li>Brad can still browse/edit files directly</li>
+        <li>Fully reversible — just delete the tags</li>
+        <li>Community consensus: file-based works, just needs structure</li>
+        <li>Priority injection means critical context always loads first</li>
+      </ul>
+      <ul class="card-cons"><div class="ph">⚠️ Cons</div>
+        <li>No semantic search — still keyword/manual retrieval</li>
+        <li>Doesn't auto-promote memories across sessions</li>
+        <li>Manual curation burden remains</li>
+        <li>Doesn't scale to multi-agent Citadel setup</li>
+      </ul>
+      <div class="card-verdict"><strong>Implementation (this week):</strong> Tag MEMORY.md sections 🔴/🟡/🟢. Create docs/vault-index.md. Update AGENTS.md wake sequence. Measure context hit rate for 2 weeks before any further changes.</div>
+    </div>
+
+    <!-- Card 3: Hand-rolled baseline -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Hand-rolled Flat Files <span class="tag tag-base card-tag">BASELINE</span></div>
+        </div>
+        <div class="card-rank" style="color:var(--muted);">—</div>
+      </div>
+      <div class="card-desc">
+        Current system. Daily logs + MEMORY.md + docs/. Works. Brad reads/edits directly. No graph, no priority injection, no semantic search. The ceiling is low but the floor is very high.
+      </div>
+      <div class="card-scores">
+        <div class="cs-item"><span class="cs-label">₿ Values</span><span class="cs-value s10">10/10</span></div>
+        <div class="cs-item"><span class="cs-label">⚙️ Difficulty</span><span class="cs-value s2">2/10 (easy)</span></div>
+        <div class="cs-item"><span class="cs-label">💥 Footgun</span><span class="cs-value s1">1/10 (safest)</span></div>
+        <div class="cs-item"><span class="cs-label">🧠 Quality</span><span class="cs-value s5">5/10</span></div>
+      </div>
+      <div class="card-verdict"><strong>Status:</strong> Keep as fallback baseline. All enhancements layer on top — nothing replaces this.</div>
+    </div>
+
+    <!-- Card 4: Engram Go -->
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">Engram (Go binary) — gpt-pilot</div></div>
+        <div class="card-rank" style="color:#a8d8a8;">#3</div>
+      </div>
+      <div class="card-desc">
+        Go binary, single-file SQLite + FTS5. 336 GitHub stars. No cloud deps. Homebrew install. Best external tool for agent memory retrieval. @SideProject reddit: "I gave my AI assistant a hippocampus — it now remembers across sessions."
+      </div>
+      <div class="card-scores">
+        <div class="cs-item"><span class="cs-label">₿ Values</span><span class="cs-value s9">9/10</span></div>
+        <div class="cs-item"><span class="cs-label">⚙️ Difficulty</span><span class="cs-value s3">3/10 (easy)</span></div>
+        <div class="cs-item"><span class="cs-label">💥 Footgun</span><span class="cs-value s3">3/10 (safe)</span></div>
+        <div class="cs-item"><span class="cs-label">🧠 Quality</span><span class="cs-value s7">7/10</span></div>
+      </div>
+      <ul class="card-pros"><div class="ph">✅ Pros</div>
+        <li>Go binary: no runtime deps, single binary, fast</li>
+        <li>SQLite + FTS5: zero server processes, inspectable</li>
+        <li>336 stars, active community, most battle-tested external option</li>
+        <li>Topic-key upserts prevent duplicate memories</li>
+        <li>No LLM calls for core operations — pure local</li>
+        <li>MIT license. Your data. Forever.</li>
+      </ul>
+      <ul class="card-cons"><div class="ph">⚠️ Cons</div>
+        <li>SQLite not human-browsable like markdown (Brad can't read it directly)</li>
+        <li>Less rich than ClawVault's knowledge graph</li>
+        <li>Integration requires wrapper code</li>
+        <li>No native OpenClaw hooks</li>
+      </ul>
+      <div class="card-verdict"><strong>Verdict:</strong> If you need semantic retrieval beyond flat files, start here. <strong>brew install engram</strong> and test in parallel. If ClawVault matures, this becomes a stepping stone.</div>
+    </div>
+
+    <!-- Card 5: ClawVault -->
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">ClawVault (Versatly)</div></div>
+        <div class="card-rank" style="color:var(--yellow);">#4</div>
+      </div>
+      <div class="card-desc">
+        Purpose-built for OpenClaw. Markdown vault + wiki-links + priority injection. 466 tests. LoCoMo benchmark 74% (vs Mem0/Zep 68.5%). Native OpenClaw hook integration. The architecture we want — but only 2 months old as of Feb 2026.
+      </div>
+      <div class="card-scores">
+        <div class="cs-item"><span class="cs-label">₿ Values</span><span class="cs-value s8">8/10</span></div>
+        <div class="cs-item"><span class="cs-label">⚙️ Difficulty</span><span class="cs-value s5">5/10 (medium)</span></div>
+        <div class="cs-item"><span class="cs-label">💥 Footgun</span><span class="cs-value s6">6/10 (moderate)</span></div>
+        <div class="cs-item"><span class="cs-label">🧠 Quality</span><span class="cs-value s8">8/10</span></div>
+      </div>
+      <ul class="card-pros"><div class="ph">✅ Pros</div>
+        <li>Only system purpose-built for OpenClaw</li>
+        <li>Obsidian-compatible vault (human-browsable)</li>
+        <li>Best memory quality of all markdown-first options</li>
+        <li>Knowledge graph + priority injection + reflection cycle</li>
+        <li>LoCoMo benchmark: 74% vs competitors' 68.5%</li>
+        <li>MIT license, data is local markdown — zero lock-in</li>
+        <li>Multi-agent memory sharing (future Citadel)</li>
+      </ul>
+      <ul class="card-cons"><div class="ph">⚠️ Cons</div>
+        <li>Only 2 months old as of this writing</li>
+        <li>Redis required for vector search (another process)</li>
+        <li>LLM calls for memory compression (adds cost)</li>
+        <li>Small team at Versatly — bus factor risk</li>
+        <li>No independent benchmark verification</li>
+        <li>openclaw hooks install = config risk</li>
+      </ul>
+      <div class="card-verdict"><strong>Verdict:</strong> Best long-term architecture. <strong>Wait 60 more days</strong> (to May 2026) for project to stabilize. Run in parallel alongside enhanced flat files. Decision gate: is it still active with 2+ contributors? If yes, migrate. If no, stay with Engram + enhanced flat files.</div>
+    </div>
+
+    <!-- Card 6: Memento -->
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">Memento <span class="tag tag-new card-tag">NEW Mar 2026</span></div></div>
+        <div class="card-rank" style="color:var(--yellow);">#5</div>
+      </div>
+      <div class="card-desc">
+        Emerged March 3, 2026. Described as "plug-and-play, fully local memory, no external services" for OpenClaw. Alignment with sovereignty values is high, but it's 3 days old with no verifiable repo.
+      </div>
+      <div class="card-scores">
+        <div class="cs-item"><span class="cs-label">₿ Values</span><span class="cs-value s8">8/10</span></div>
+        <div class="cs-item"><span class="cs-label">⚙️ Difficulty</span><span class="cs-value s3">3/10 (easy)</span></div>
+        <div class="cs-item"><span class="cs-label">💥 Footgun</span><span class="cs-value s7">7/10 (risky)</span></div>
+        <div class="cs-item"><span class="cs-label">🧠 Quality</span><span class="cs-value s6">6/10</span></div>
+      </div>
+      <div class="card-verdict"><strong>Verdict:</strong> Watch it. If it has a public repo with 50+ stars in 30 days, reassess. Right now it's vapor.</div>
+    </div>
+
+    <!-- Card 7: openclaw-engram -->
+    <div class="card card-avoid">
+      <div class="card-header">
+        <div><div class="card-title">openclaw-engram (joshuaswarren)</div></div>
+        <div class="card-rank" style="color:#e67e22;">#7</div>
+      </div>
+      <div class="card-desc">
+        Mentioned by @shitcoinmaster_ (March 3) and @JoshuaSWarren (March 1). Most sophisticated memory model (episode/note dual store, Memory Boxes). But: v8 in weeks = API churn, solo dev, OpenAI required for extraction.
+      </div>
+      <div class="card-scores">
+        <div class="cs-item"><span class="cs-label">₿ Values</span><span class="cs-value s5">5/10</span></div>
+        <div class="cs-item"><span class="cs-label">⚙️ Difficulty</span><span class="cs-value s5">5/10</span></div>
+        <div class="cs-item"><span class="cs-label">💥 Footgun</span><span class="cs-value s7">7/10 (risky)</span></div>
+        <div class="cs-item"><span class="cs-label">🧠 Quality</span><span class="cs-value s8">8/10</span></div>
+      </div>
+      <div class="card-verdict"><strong>Verdict:</strong> Skip. OpenAI dependency disqualifies it for sovereignty-first stack. Solo dev with rapid version churn. The sophisticated architecture is undermined by a dependency you can't control.</div>
+    </div>
+
+    <!-- Card 8: Mem0 OSS -->
+    <div class="card card-avoid">
+      <div class="card-header">
+        <div><div class="card-title">Mem0 OSS (self-hosted)</div></div>
+        <div class="card-rank" style="color:#e67e22;">#8</div>
+      </div>
+      <div class="card-desc">
+        26,000+ stars. Best benchmark scores (+26% over OpenAI Memory on LoCoMo, 91% faster, 90% fewer tokens). YC-backed. BUT: requires OpenAI API by default, Python + vector store stack, VC interests may conflict with self-hosting long-term. OpenMemory MCP version also requires OpenAI despite "local" branding.
+      </div>
+      <div class="card-scores">
+        <div class="cs-item"><span class="cs-label">₿ Values</span><span class="cs-value s4">4/10</span></div>
+        <div class="cs-item"><span class="cs-label">⚙️ Difficulty</span><span class="cs-value s7">7/10 (hard)</span></div>
+        <div class="cs-item"><span class="cs-label">💥 Footgun</span><span class="cs-value s5">5/10</span></div>
+        <div class="cs-item"><span class="cs-label">🧠 Quality</span><span class="cs-value s9">9/10</span></div>
+      </div>
+      <ul class="card-pros"><div class="ph">✅ Pros</div>
+        <li>Best memory retrieval quality of any option</li>
+        <li>26,000+ stars, large community, YC-backed</li>
+        <li>Can technically use Ollama instead of OpenAI</li>
+        <li>Active development, v1.0.0 just released</li>
+      </ul>
+      <ul class="card-cons"><div class="ph">⚠️ Cons</div>
+        <li>Default requires OpenAI API key (values violation)</li>
+        <li>Python + pip + vector store = complex maintenance</li>
+        <li>YC-backed = SaaS-first incentives, may de-emphasize self-hosting</li>
+        <li>Reddit community caught OpenMemory claiming "local" but needing OpenAI (Feb 24)</li>
+        <li>Heaviest stack of any option considered</li>
+      </ul>
+      <div class="card-verdict"><strong>Verdict:</strong> Impressive but incompatible with sovereignty values. If quality matters more than sovereignty, use Mem0 with Ollama. Otherwise, skip.</div>
+    </div>
+
+    <!-- Card 9: RAG pgvector -->
+    <div class="card card-avoid">
+      <div class="card-header">
+        <div><div class="card-title">RAG + PostgreSQL pgvector <span class="tag tag-hot card-tag">COMMUNITY HOT</span></div></div>
+        <div class="card-rank" style="color:#e67e22;">#9</div>
+      </div>
+      <div class="card-desc">
+        Simon Hoiberg (@SimonHoiberg, 747 likes, Feb 23): search tool + CRON heartbeat + PostgreSQL pgvector = "MUCH better memory." Community loved it. But it requires a PostgreSQL server always-on, pgvector extension, CRON jobs, and significant setup.
+      </div>
+      <div class="card-scores">
+        <div class="cs-item"><span class="cs-label">₿ Values</span><span class="cs-value s7">7/10</span></div>
+        <div class="cs-item"><span class="cs-label">⚙️ Difficulty</span><span class="cs-value s8">8/10 (hard)</span></div>
+        <div class="cs-item"><span class="cs-label">💥 Footgun</span><span class="cs-value s6">6/10</span></div>
+        <div class="cs-item"><span class="cs-label">🧠 Quality</span><span class="cs-value s7">7/10</span></div>
+      </div>
+      <div class="card-verdict"><strong>Verdict:</strong> Another always-on server on the Mac mini. We've had 6 gateway crashes — adding PostgreSQL to manage is the wrong direction. Skip unless you're already running PostgreSQL for something else.</div>
+    </div>
+
+    <!-- Card 10: Neo4j Graph -->
+    <div class="card card-avoid">
+      <div class="card-header">
+        <div><div class="card-title">Neo4j Graph + Markdown Mirror</div></div>
+        <div class="card-rank" style="color:var(--red);">#10</div>
+      </div>
+      <div class="card-desc">
+        @paoloanzn (320 likes, Feb 23) proposed Neo4j graph backend mirrored to markdown notes. "RAG graph memory by default" with relationship traversal. Architecturally interesting — operationally a nightmare.
+      </div>
+      <div class="card-scores">
+        <div class="cs-item"><span class="cs-label">₿ Values</span><span class="cs-value s6">6/10</span></div>
+        <div class="cs-item"><span class="cs-label">⚙️ Difficulty</span><span class="cs-value s9">9/10 (very hard)</span></div>
+        <div class="cs-item"><span class="cs-label">💥 Footgun</span><span class="cs-value s7">7/10 (risky)</span></div>
+        <div class="cs-item"><span class="cs-label">🧠 Quality</span><span class="cs-value s8">8/10</span></div>
+      </div>
+      <div class="card-verdict"><strong>Verdict:</strong> Hard no. Neo4j is a full graph database requiring its own server, Cypher query expertise, and constant maintenance. We're not building a knowledge graph startup. Skip.</div>
+    </div>
+
+    <!-- Cards 11-13 compact -->
+    <div class="card card-avoid">
+      <div class="card-header">
+        <div><div class="card-title">memelord (RL memory) <span class="tag tag-new card-tag">NEW</span></div></div>
+        <div class="card-rank" style="color:#e67e22;">#11</div>
+      </div>
+      <div class="card-desc">@glcst (Feb 23): "memory system that uses reinforcement learning" integrated with OpenClaw. Conceptually interesting — RL-based preference learning could be powerful. Unknown stack, unknown maturity.</div>
+      <div class="card-verdict"><strong>Verdict:</strong> Interesting concept, zero verifiable info. Watch list only.</div>
+    </div>
+
+    <div class="card card-avoid">
+      <div class="card-header">
+        <div><div class="card-title">OpenMind (Visualization) <span class="tag tag-new card-tag">NEW Mar 2</span></div></div>
+        <div class="card-rank" style="color:#e67e22;">#12</div>
+      </div>
+      <div class="card-desc">@xenpub (March 2): "#OpenMind turns your installation into a fully interactive, live-editable mind map... Real-time memory visualization." A UI layer for memory browsing, not a retrieval system. Useful if you want visual exploration.</div>
+      <div class="card-verdict"><strong>Verdict:</strong> Not a memory system — it's a visualization layer. Could complement our enhanced flat files if it matures. Not a priority fix.</div>
+    </div>
+
+    <div class="card card-avoid">
+      <div class="card-header">
+        <div><div class="card-title">Neutron <span class="tag tag-new card-tag">NEW Mar 5</span></div></div>
+        <div class="card-rank" style="color:var(--red);">#13</div>
+      </div>
+      <div class="card-desc">@jack_ofv_Web3 (March 5, 1 day ago): "Neutron gave @openclaw AI agents memory!" Described as "the missing layer for real agent workflows." One tweet. No repo. No stars. No information.</div>
+      <div class="card-verdict"><strong>Verdict:</strong> Vapor. Check back in 90 days.</div>
+    </div>
+
+  </div><!-- /cards-grid -->
+
+  <!-- ── What's New Since Feb 22 ── -->
+  <h2>🆕 What's New Since Feb 22 <span class="badge-new">MARCH 2026 PULSE</span></h2>
+  <p style="color:var(--muted); font-size:13px; margin-bottom:16px;">
+    Community signal from Reddit, X, and HN in the 12 days since our last research (Feb 22 → March 6). Ranked by social proof.
+  </p>
+
+  <div class="whats-new-grid">
+
+    <div class="wn-item">
+      <div class="wn-date">March 3, 2026</div>
+      <div class="wn-source">@Voxyz_ai · X · 76 likes</div>
+      <div class="wn-text">🔑 <strong>OpenClaw has built-in hybrid search + temporal decay.</strong> "Turned it on. 80% of memory problems gone." This was unknown to us on Feb 22. Investigate immediately.</div>
+    </div>
+
+    <div class="wn-item">
+      <div class="wn-date">Feb 23, 2026</div>
+      <div class="wn-source">@SimonHoiberg · X · 747 likes</div>
+      <div class="wn-text">RAG + PostgreSQL pgvector pattern getting community traction. "Create a search tool, Memory CRON/heartbeat = MUCH better memory." High engagement but complexity disqualifies it for our setup.</div>
+    </div>
+
+    <div class="wn-item">
+      <div class="wn-date">Feb 24, 2026</div>
+      <div class="wn-source">r/LLMDevs · Reddit · 66 score</div>
+      <div class="wn-text">⚠️ <strong>Community caught OpenMemory (mem0) lying about being "local."</strong> "Boasts locally running memory with MCP but underneath still requires OpenAI API key." Validates our Feb 22 skepticism of mem0's sovereignty claims.</div>
+    </div>
+
+    <div class="wn-item">
+      <div class="wn-date">Feb 26, 2026</div>
+      <div class="wn-source">@jordymaui · X · 249 likes</div>
+      <div class="wn-text">"The fix is 3 files — stop blaming the tool. Fix the memory." Community converging on file-based pragmatism. Validates our Enhanced Flat Files recommendation.</div>
+    </div>
+
+    <div class="wn-item">
+      <div class="wn-date">March 3, 2026</div>
+      <div class="wn-source">@fabiopedrazzoli · X</div>
+      <div class="wn-text">🆕 <strong>Memento:</strong> "plug-and-play, fully local memory... No external services." New entrant. Local-first values alignment is high. Too new to verify. Watch for 30 days.</div>
+    </div>
+
+    <div class="wn-item">
+      <div class="wn-date">March 2, 2026</div>
+      <div class="wn-source">@xenpub · X · 58 likes</div>
+      <div class="wn-text">🆕 <strong>OpenMind:</strong> "turns OpenClaw into a live-editable mind map. Real-time memory visualization." Visualization layer, not a retrieval system. Interesting for Brad's browsing workflow but not a memory fix.</div>
+    </div>
+
+    <div class="wn-item">
+      <div class="wn-date">March 3, 2026</div>
+      <div class="wn-source">@shitcoinmaster_ · X · 75 score</div>
+      <div class="wn-text">openclaw-engram highlighted as "tackles one of the most structurally important gaps — persistent memory." Community awareness growing. Still disqualified by OpenAI dependency.</div>
+    </div>
+
+    <div class="wn-item">
+      <div class="wn-date">March 3, 2026</div>
+      <div class="wn-source">@aisearchio · X · 2,858 likes</div>
+      <div class="wn-text">Alibaba releases open-source "OpenClaw + Claude" equivalent with "self hosted, persistent memory, skills, & more." Competitive landscape confirms direction. Not OpenClaw-specific but validates our architecture choices.</div>
+    </div>
+
+    <div class="wn-item">
+      <div class="wn-date">Feb 22, 2026</div>
+      <div class="wn-source">@meta_alchemist · X · 369 likes</div>
+      <div class="wn-text">Spark system proposed: "replace MD note memory with an intelligence loop." Intelligence loop = memory becomes inference, not storage. Speculative but architecturally interesting for future.</div>
+    </div>
+
+    <div class="wn-item">
+      <div class="wn-date">March 5, 2026</div>
+      <div class="wn-source">@jack_ofv_Web3 · X</div>
+      <div class="wn-text">🆕 <strong>Neutron</strong> announced: "Persistent memory for OpenClaw agents." Newest entrant. One tweet. Zero verification possible. Add to 90-day watchlist.</div>
+    </div>
+
+    <div class="wn-item">
+      <div class="wn-date">Feb 23, 2026</div>
+      <div class="wn-source">@glcst · X · 206 likes</div>
+      <div class="wn-text">🆕 <strong>memelord</strong>: "memory system that uses reinforcement learning" integrated with OpenClaw. RL-based preference learning is genuinely different from all other approaches. Worth watching if it gets a public repo.</div>
+    </div>
+
+    <div class="wn-item">
+      <div class="wn-date">Feb 25, 2026</div>
+      <div class="wn-source">r/openclaw · Reddit · 68 score</div>
+      <div class="wn-text">Community thread: "Who's got a legit fix for memory issues?" Top answers: Mem0 integration, file-based solutions, RAG. No consensus winner — confirms there's no silver bullet, and our enhanced flat files approach is as good as anything.</div>
+    </div>
+
+  </div>
+
+  <!-- ── Recommended Action Plan ── -->
+  <h2>🗺️ Recommended Action Plan</h2>
+  <div class="callout callout-good">
+    The playbook is now: <strong>(1) Enable what we already have → (2) Enhance what we already do → (3) Add Engram if we need more → (4) Migrate to ClawVault when it's proven.</strong> Do not skip steps.
+  </div>
+
+  <div class="rec-phases">
+
+    <div class="rec-phase">
+      <div class="phase-label">Phase 0 — This Week</div>
+      <div class="phase-title">Enable Built-ins + Priority Tags</div>
+      <ul class="phase-items">
+        <li>Investigate OpenClaw's built-in hybrid search + temporal decay <span>(check docs / openclaw --help)</span></li>
+        <li>Enable hybrid search if available</li>
+        <li>Tag MEMORY.md sections: 🔴 Critical / 🟡 Notable / 🟢 Background</li>
+        <li>Update AGENTS.md wake sequence: load 🔴 first, budget 🟡/🟢</li>
+        <li>Create docs/vault-index.md <span>(TOC of all memory files)</span></li>
+        <li>Baseline: manually log context hit rate for 10 sessions</li>
+      </ul>
+    </div>
+
+    <div class="rec-phase">
+      <div class="phase-label">Phase 1 — 30 Days</div>
+      <div class="phase-title">Engram Parallel Test</div>
+      <ul class="phase-items">
+        <li>Install Engram (Go binary, Homebrew) — non-destructive</li>
+        <li>Run parallel: Engram retrieval vs flat-file retrieval for same queries</li>
+        <li>Decision gate: Engram hits ≥20% more useful context → proceed. Otherwise → stay flat.</li>
+        <li>Monitor Memento and Neutron repos for activity/stars</li>
+        <li>Check ClawVault commit frequency (active = good sign)</li>
+      </ul>
+    </div>
+
+    <div class="rec-phase">
+      <div class="phase-label">Phase 2 — 60-90 Days</div>
+      <div class="phase-title">ClawVault Decision Gate</div>
+      <ul class="phase-items">
+        <li>Assess ClawVault: active contributors ≥2? Bugs being fixed? → migrate</li>
+        <li>If ClawVault inactive: adopt Engram as permanent external layer</li>
+        <li>Reassess Memento if it has 100+ stars by May 2026</li>
+        <li>Evaluate Mem0 + Ollama only if quality gap vs flat files is &gt;30%</li>
+        <li>Multi-agent memory sharing planning for Citadel expansion</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="callout callout-warning" style="margin-top:0;">
+    <strong>Rollback Protocol:</strong> All memory is markdown + git. If anything breaks: <code>git revert</code> to pre-change state, disable hooks (if any), restore AGENTS.md wake sequence. &lt;5 minutes. This is why markdown-first wins.
+  </div>
+
+  <!-- ── What Feb 22 Got Right / Wrong ── -->
+  <h2>🔍 Feb 22 Findings: What Held Up</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:32px;">
+    <div>
+      <h3 style="color:var(--green); margin-top:0;">✅ Validated</h3>
+      <ul style="font-size:13px; color:var(--muted); padding-left:0;">
+        <li style="margin-bottom:6px;">ClawVault recommendation was correct — still best long-term external option</li>
+        <li style="margin-bottom:6px;">Mem0's sovereignty concerns validated: community caught OpenMemory lying about local-only</li>
+        <li style="margin-bottom:6px;">Enhanced flat files approach validated by @jordymaui community consensus</li>
+        <li style="margin-bottom:6px;">openclaw-engram solo-dev risk concern: v8+ in weeks, still churning</li>
+        <li style="margin-bottom:6px;">Cortex Python complexity concern: no new community adoption signal</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="color:var(--orange); margin-top:0;">🆕 New Discoveries</h3>
+      <ul style="font-size:13px; color:var(--muted); padding-left:0;">
+        <li style="margin-bottom:6px;">OpenClaw has built-in hybrid search + temporal decay (missed Feb 22)</li>
+        <li style="margin-bottom:6px;">Memento, Neutron, OpenMind all launched after Feb 22</li>
+        <li style="margin-bottom:6px;">memelord (RL memory) is a genuinely different approach — not on Feb 22 radar</li>
+        <li style="margin-bottom:6px;">RAG + pgvector pattern much more popular than anticipated (747 likes)</li>
+        <li style="margin-bottom:6px;">Alibaba open-source competitor validates OpenClaw architecture direction</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── Sources ── -->
+  <h2>📚 Sources</h2>
+  <p style="font-size:12px; color:var(--muted); margin-bottom:12px;">All sources retrieved via last30days.py (Reddit + X + HN), Feb 22 deep-dive research, and GitHub direct fetches. Web search API unavailable during this report — Perplexity 402.</p>
+  <ul class="sources-list">
+    <li><a href="https://x.com/Voxyz_ai/status/2028878067389919238">@Voxyz_ai — OpenClaw built-in hybrid search (Mar 3)</a></li>
+    <li><a href="https://x.com/SimonHoiberg/status/2025918084591063322">@SimonHoiberg — RAG pgvector solution (Feb 23, 747 likes)</a></li>
+    <li><a href="https://x.com/jordymaui/status/2026815428060750267">@jordymaui — 3 files fix (Feb 26, 249 likes)</a></li>
+    <li><a href="https://www.reddit.com/r/openclaw/comments/1re6nzr/">r/openclaw — Memory fix thread (Feb 25, score 68)</a></li>
+    <li><a href="https://www.reddit.com/r/LLMDevs/comments/1rdv0jz/">r/LLMDevs — OpenMemory OpenAI dep exposed (Feb 24, score 66)</a></li>
+    <li><a href="https://x.com/shitcoinmaster_/status/2028746242168398190">@shitcoinmaster_ — openclaw-engram coverage (Mar 3)</a></li>
+    <li><a href="https://x.com/JoshuaSWarren/status/2028145237147959709">@JoshuaSWarren — openclaw-engram endorsement (Mar 1)</a></li>
+    <li><a href="https://x.com/fabiopedrazzoli/status/2028725731765973299">@fabiopedrazzoli — Memento launch (Mar 3)</a></li>
+    <li><a href="https://x.com/xenpub/status/2028326916999037178">@xenpub — OpenMind launch (Mar 2, 58 likes)</a></li>
+    <li><a href="https://x.com/jack_ofv_Web3/status/2029698130099286033">@jack_ofv_Web3 — Neutron announcement (Mar 5)</a></li>
+    <li><a href="https://x.com/glcst/status/2025960896804110580">@glcst — memelord RL memory (Feb 23, 206 likes)</a></li>
+    <li><a href="https://x.com/paoloanzn/status/2025980742522786211">@paoloanzn — Neo4j graph memory (Feb 23, 320 likes)</a></li>
+    <li><a href="https://x.com/meta_alchemist/status/2025588354918863297">@meta_alchemist — Spark intelligence loop (Feb 22, 369 likes)</a></li>
+    <li><a href="https://x.com/aisearchio/status/2028685049462509828">@aisearchio — Alibaba open-source (Mar 3, 2,858 likes)</a></li>
+    <li><a href="https://x.com/AuthorityNull/status/2028293669820748264">@AuthorityNull — Mem0 + file hack (Mar 2)</a></li>
+    <li><a href="https://github.com/mem0ai/mem0">mem0ai/mem0 — GitHub (26k+ stars, LoCoMo +26%)</a></li>
+    <li>Internal: memory-system-comparison-2026-02-22.md (Sene research)</li>
+    <li>last30days.py runs: "openclaw memory enhancement" + "openclaw persistent memory" (Mar 6, 2026)</li>
+  </ul>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <p>
+      <strong style="color:var(--orange);">Sene Maro</strong> — Memory Enhancement Analysis · OpenClaw Workspace<br>
+      This report synthesizes: <strong>(1)</strong> Feb 22, 2026 deep-dive research (direct GitHub/repo fetches, 4 systems analyzed) and <strong>(2)</strong> March 2026 community pulse (Reddit r/openclaw, r/LLMDevs, r/SideProject · X/Twitter · Hacker News — 14-day window via last30days.py).<br>
+      <br>
+      All scores are opinions, not benchmarks. Weighted formula: BV×0.30 + MQ×0.30 + (10-D)×0.20 + (10-F)×0.20. The Bitcoiner Values weight reflects explicit founder priorities: sovereignty &gt; cloud, local &gt; API, open source &gt; proprietary.<br>
+      <br>
+      Perplexity web search API unavailable during this report (402 — insufficient credits). Community data from last30days.py (Reddit + X + HN). GitHub data from direct fetches. No independent benchmark verification available for ClawVault LoCoMo numbers.<br>
+      <br>
+      Next refresh: May 2026 (after ClawVault 60-day maturity gate). Generated: March 6, 2026 06:45 EST.
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>
