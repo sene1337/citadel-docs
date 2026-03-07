@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our AI Agent Was Blind to 88% of Its Own Knowledge — Here's How We Found Out</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --card: #161b22;
+    --border: #30363d;
+    --text: #c9d1d9;
+    --text-muted: #8b949e;
+    --accent: #f7931a;
+    --accent-dim: #f7931a33;
+    --green: #3fb950;
+    --green-dim: #3fb95033;
+    --red: #f85149;
+    --red-dim: #f8514933;
+    --blue: #58a6ff;
+    --blue-dim: #58a6ff33;
+    --purple: #bc8cff;
+    --purple-dim: #bc8cff33;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 2rem 1rem;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--accent), var(--blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1.5rem;
+  }
+
+  .tldr {
+    background: var(--accent-dim);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .tldr h2 {
+    color: var(--accent);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+
+  .tldr p {
+    font-size: 1.05rem;
+  }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+
+  .event {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .event::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 0.5rem;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    z-index: 1;
+  }
+
+  .event.discovery::before { border-color: var(--red); background: var(--red-dim); }
+  .event.fix::before { border-color: var(--green); background: var(--green-dim); }
+  .event.config::before { border-color: var(--blue); background: var(--blue-dim); }
+  .event.insight::before { border-color: var(--purple); background: var(--purple-dim); }
+  .event.milestone::before { border-color: var(--accent); background: var(--accent-dim); width: 20px; height: 20px; left: calc(-2rem - 2px); }
+
+  .event-time {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    margin-bottom: 0.25rem;
+  }
+
+  .event-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .event-body {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+  }
+
+  .event-body p { margin-bottom: 0.5rem; }
+  .event-body p:last-child { margin-bottom: 0; }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 12px;
+    font-weight: 500;
+    margin-right: 0.25rem;
+  }
+
+  .tag-red { background: var(--red-dim); color: var(--red); }
+  .tag-green { background: var(--green-dim); color: var(--green); }
+  .tag-blue { background: var(--blue-dim); color: var(--blue); }
+  .tag-purple { background: var(--purple-dim); color: var(--purple); }
+  .tag-orange { background: var(--accent-dim); color: var(--accent); }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    text-align: center;
+  }
+
+  .stat-card .number {
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+  }
+
+  .stat-card .label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .stat-card.before .number { color: var(--red); }
+  .stat-card.after .number { color: var(--green); }
+
+  .code-block {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+    margin: 0.75rem 0;
+    white-space: pre;
+    color: var(--text-muted);
+  }
+
+  .code-block .key { color: var(--blue); }
+  .code-block .val { color: var(--green); }
+  .code-block .comment { color: var(--text-muted); font-style: italic; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+
+  .section-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .quote {
+    border-left: 3px solid var(--accent);
+    padding-left: 1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin: 0.75rem 0;
+  }
+
+  .footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  .footer a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  @media (max-width: 600px) {
+    body { padding: 1rem 0.75rem; }
+    h1 { font-size: 1.5rem; }
+    .stat-grid { grid-template-columns: 1fr; }
+    .event-body { padding: 0.75rem 1rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>⚡ Memory Search Journey</h1>
+<p class="subtitle">How we discovered our AI agent couldn't search 88% of its own knowledge — and fixed it in 24 hours.</p>
+
+<div class="tldr">
+  <h2>TL;DR</h2>
+  <p>Our AI agent (Sene) had semantic memory search enabled — but it was broken for 24 days, then once fixed, only indexed 11.5% of our knowledge base. Brad's one question ("Don't we store things more in playbooks & SOPs?") exposed the gap. Fixed in one config line.</p>
+</div>
+
+<div class="section-label">The Numbers</div>
+
+<div class="stat-grid">
+  <div class="stat-card before">
+    <div class="number">24</div>
+    <div class="label">Days memory was silently broken</div>
+  </div>
+  <div class="stat-card before">
+    <div class="number">88.5%</div>
+    <div class="label">Knowledge invisible to search</div>
+  </div>
+  <div class="stat-card after">
+    <div class="number">396</div>
+    <div class="label">Files now indexed</div>
+  </div>
+  <div class="stat-card after">
+    <div class="number">3,028</div>
+    <div class="label">Searchable chunks</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="section-label">Timeline — March 6–7, 2026</div>
+
+<div class="timeline">
+
+  <div class="event discovery">
+    <div class="event-time">Mar 6, ~7:00 AM</div>
+    <div class="event-title">🔍 Research Phase</div>
+    <div class="event-body">
+      <p>Ran a 15-option comparison of memory enhancement solutions, scored on sovereignty, cost, footgun risk, and capability. Used a bitcoiner-first framework: local &gt; cloud, self-hosted &gt; third-party.</p>
+      <p>Key finding: <strong>"The best memory upgrade is the one you already own."</strong> OpenClaw's built-in hybrid search + temporal decay was the winner. No external dependencies needed.</p>
+      <p><span class="tag tag-purple">research</span> <span class="tag tag-orange">sovereignty</span></p>
+    </div>
+  </div>
+
+  <div class="event discovery">
+    <div class="event-time">Mar 6, ~8:20 AM</div>
+    <div class="event-title">🔴 Discovery: Broken for 24 Days</div>
+    <div class="event-body">
+      <p>Root-caused why <code>memory_search</code> had never worked. On Feb 10, Brad asked to enable it. The embedding backend (OpenAI) was configured — but <code>memory-core</code> was never added to <code>plugins.allow</code> or <code>plugins.slots.memory</code>.</p>
+      <p>The tool appeared in the system prompt. The agent referenced it in instructions. But it was never actually loaded. <strong>24 days of silent failure.</strong></p>
+      <p>Additionally, the Ollama baseUrl was set to <code>/api</code> which doubled the path → 404.</p>
+      <p><span class="tag tag-red">regression #56</span> <span class="tag tag-red">config-without-verification</span></p>
+    </div>
+  </div>
+
+  <div class="event fix">
+    <div class="event-time">Mar 6, ~9:00 AM</div>
+    <div class="event-title">🟢 Fix #1: Plugin Activation</div>
+    <div class="event-body">
+      <p>Three config patches applied:</p>
+      <div class="code-block"><span class="comment">// 1. Allow the plugin</span>
+<span class="key">plugins.allow</span>: [<span class="val">"memory-core"</span>]
+
+<span class="comment">// 2. Assign it to the memory slot</span>
+<span class="key">plugins.slots.memory</span>: <span class="val">"memory-core"</span>
+
+<span class="comment">// 3. Fix the Ollama URL</span>
+<span class="key">memorySearch.remote.baseUrl</span>: <span class="val">"http://localhost:11434"</span></div>
+      <p><span class="tag tag-green">config fix</span></p>
+    </div>
+  </div>
+
+  <div class="event config">
+    <div class="event-time">Mar 6, ~9:30 AM</div>
+    <div class="event-title">⚙️ Advanced Features Enabled</div>
+    <div class="event-body">
+      <p>Switched from OpenAI embeddings to <strong>local Ollama</strong> (nomic-embed-text) — sovereign, no API cost, no data leaving the machine. Then enabled the full feature set:</p>
+      <div class="code-block"><span class="key">provider</span>: <span class="val">"ollama"</span>           <span class="comment">// local, sovereign</span>
+<span class="key">hybrid</span>:   <span class="val">true</span>              <span class="comment">// vector 0.7 + BM25 0.3</span>
+<span class="key">mmr</span>:      <span class="val">true (λ=0.7)</span>      <span class="comment">// deduplicate results</span>
+<span class="key">decay</span>:    <span class="val">30-day half-life</span>  <span class="comment">// recent &gt; old</span>
+<span class="key">sessions</span>: <span class="val">true</span>              <span class="comment">// search conversations too</span>
+<span class="key">cache</span>:    <span class="val">50,000 entries</span>    <span class="comment">// don't re-embed</span></div>
+      <p><span class="tag tag-blue">sovereign</span> <span class="tag tag-blue">local-first</span></p>
+    </div>
+  </div>
+
+  <div class="event fix">
+    <div class="event-time">Mar 6, ~10:00 AM</div>
+    <div class="event-title">✅ Verified Working</div>
+    <div class="event-body">
+      <p>First successful <code>memory_search</code> call returned real results with file paths, line numbers, and relevance scores. Brad's test: <em>"Prove you can use that tool."</em></p>
+      <p>Logged as a milestone in the personality changelog. 30-day measurement window started.</p>
+      <p><span class="tag tag-green">verified</span></p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="event insight">
+    <div class="event-time">Mar 7, ~9:14 AM</div>
+    <div class="event-title">📊 Tool Usage Audit: The Smoking Gun</div>
+    <div class="event-body">
+      <p>Brad asked for a tool-call analysis of the last 24 hours:</p>
+      <div class="code-block">exec:           210
+read:            76
+edit:            66
+write:           12
+memory_search:    7
+memory_get:       0
+─────────────────────
+total:          376</div>
+      <p><strong>7 searches out of 376 calls. Zero follow-up reads.</strong> We had a semantic memory system we spent a full day building and it was being used 1.86% of the time.</p>
+      <p><span class="tag tag-red">underuse</span> <span class="tag tag-purple">self-audit</span></p>
+    </div>
+  </div>
+
+  <div class="event discovery">
+    <div class="event-time">Mar 7, ~11:20 AM</div>
+    <div class="event-title">💡 Brad's Question That Changed Everything</div>
+    <div class="event-body">
+      <div class="quote">"Don't we store things more in playbooks & SOPs than in memory.md and memory/?"</div>
+      <p>This was the moment. We checked:</p>
+      <div class="code-block"><span class="comment">// What memory_search was indexing:</span>
+memory/ + MEMORY.md     →  6,743 lines  (11.5%)
+
+<span class="comment">// What it was ignoring:</span>
+ops/   (playbooks, SOPs) →  8,531 lines
+docs/  (projects, research) → 43,598 lines
+                           ─────────────
+TOTAL INVISIBLE:            52,129 lines  (88.5%)</div>
+      <p>Our playbooks, SOPs, decision ledger, regressions file, project registries, research docs — the densest, most decision-rich content we have — was completely invisible to search.</p>
+      <p><span class="tag tag-red">88.5% blind spot</span> <span class="tag tag-orange">Brad caught it</span></p>
+    </div>
+  </div>
+
+  <div class="event config">
+    <div class="event-time">Mar 7, ~11:30 AM</div>
+    <div class="event-title">⚙️ Fix #2: One Config Line</div>
+    <div class="event-body">
+      <div class="code-block"><span class="key">memorySearch.extraPaths</span>: [<span class="val">"ops/"</span>, <span class="val">"docs/"</span>]</div>
+      <p>Plus two boot file edits:</p>
+      <p><strong>AGENTS.md Rule #5:</strong> Collapsed "query memory first, then playbooks" into just "memory_search first" — because the playbooks are now IN the search index.</p>
+      <p><strong>MEMORY.md:</strong> Updated to reflect full-workspace scope.</p>
+      <p><span class="tag tag-blue">config</span> <span class="tag tag-green">boot files</span></p>
+    </div>
+  </div>
+
+  <div class="event milestone">
+    <div class="event-time">Mar 7, ~11:37 AM</div>
+    <div class="event-title">🏁 Full Workspace Indexed</div>
+    <div class="event-body">
+      <div class="code-block"><span class="comment">// Before:</span>
+<span class="key">Memory</span>: <span class="val">~64 files</span> · <span class="val">~500 chunks</span>
+
+<span class="comment">// After:</span>
+<span class="key">Memory</span>: <span class="val">396 files</span> · <span class="val">3,028 chunks</span></div>
+      <p>First test search for "decision architecture playbook" returned results from <code>ops/playbooks/decisions/</code>, <code>ops/decisions/decision-ledger.md</code>, and <code>docs/drafts/</code> — all previously invisible.</p>
+      <p><span class="tag tag-green">verified</span> <span class="tag tag-orange">milestone</span></p>
+    </div>
+  </div>
+
+</div>
+
+<hr class="divider">
+
+<div class="section-label">What We Learned</div>
+
+<div class="event-body" style="margin-bottom: 1.5rem;">
+  <p><strong>1. Config ≠ working.</strong> Memory search was "configured" for 24 days but never verified. The plugin wasn't even loaded. Lesson: don't trust, verify.</p>
+  <p><strong>2. The tool description lies.</strong> The system prompt says <code>memory_search</code> covers "MEMORY.md + memory/*.md." After adding <code>extraPaths</code>, it actually covers the full workspace — but the auto-generated description doesn't update. We had to override it in our own boot files.</p>
+  <p><strong>3. The human caught what the AI missed.</strong> Sene ran a tool usage audit and identified underuse (7/376). But it took Brad asking "don't we store things in playbooks?" to expose that the search was indexing the wrong files entirely. The AI was looking at usage frequency; the human was looking at coverage.</p>
+  <p><strong>4. Sovereign &gt; convenient.</strong> We chose local Ollama over OpenAI for embeddings. Slightly slower, zero API cost, no data leaving the machine. For a Bitcoin-focused operation, this wasn't even a tradeoff — it was the only option.</p>
+</div>
+
+<div class="section-label">The Fix Was One Line</div>
+
+<div class="event-body">
+  <div class="code-block"><span class="key">memorySearch.extraPaths</span>: [<span class="val">"ops/"</span>, <span class="val">"docs/"</span>]</div>
+  <p>That's it. From 11.5% coverage to 100%. From 64 files to 396. From blind to seeing.</p>
+  <p>Sometimes the most impactful changes are the ones where you realize you'd been looking in the wrong place the whole time.</p>
+</div>
+
+<hr class="divider">
+
+<div class="section-label">The Unsolved Blind Spot</div>
+
+<div class="event-body" style="border-left: 3px solid var(--red); margin-bottom: 1.5rem;">
+  <p><strong>We fixed what the agent can search. We haven't fixed how often it searches.</strong></p>
+  <p>The tool usage audit tells the story: 7 memory searches out of 376 tool calls. Even with full workspace indexing, if the agent defaults to <code>read</code> (opening files directly from known paths) or relies on the compaction summary instead of searching, the semantic memory system sits idle.</p>
+  <p>This is the harder problem. The indexing fix was mechanical — one config line. The usage fix is behavioral. It requires the agent to develop a new default: <strong>search before reading, even when you think you know the answer.</strong></p>
+  <p>Three specific failure modes remain open:</p>
+  <div class="code-block"><span class="comment">// 1. Compaction trust</span>
+<span class="comment">// After context compaction, the agent trusts the</span>
+<span class="comment">// summary instead of querying memory for current state.</span>
+<span class="comment">// The summary is stale by definition.</span>
+
+<span class="comment">// 2. Familiarity bias</span>
+<span class="comment">// Agent only searches when something feels unfamiliar.</span>
+<span class="comment">// But the highest-value searches are for things you</span>
+<span class="comment">// THINK you know but have a stale version of.</span>
+
+<span class="comment">// 3. Direct-path muscle memory</span>
+<span class="comment">// Agent has memorized file paths (read ops/playbooks/x.md)</span>
+<span class="comment">// and goes straight there. Misses related context in</span>
+<span class="comment">// other files that search would surface.</span></div>
+  <p>This is logged as a behavioral experiment with a 14-day test window. The measurement: does <code>memory_search</code> usage increase from 1.86% of tool calls to something meaningful? Does the "I didn't know" regression class drop to near-zero?</p>
+  <p>We'll know by March 21.</p>
+</div>
+
+<div class="footer">
+  <p>Built by Sene Maro ⚡ for Brad Mills</p>
+  <p>March 7, 2026 · <a href="https://docs.openclaw.ai">OpenClaw</a></p>
+</div>
+
+</div>
+</body>
+</html>
