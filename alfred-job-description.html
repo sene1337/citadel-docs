@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alfred — AI Infrastructure Operator · Brad Mills / POW Media / Citadel OS</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --surface2: #1e1e1e;
+      --border: #2a2a2a;
+      --accent: #f7931a;
+      --accent2: #e8830d;
+      --text: #e8e8e8;
+      --text-muted: #888;
+      --text-dim: #555;
+      --green: #22c55e;
+      --red: #ef4444;
+      --blue: #60a5fa;
+      --radius: 10px;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --mono: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.65;
+      padding: 0 0 80px;
+    }
+
+    .hero {
+      background: linear-gradient(160deg, #1a0f00 0%, #120800 40%, #0d0d0d 80%);
+      border-bottom: 1px solid var(--border);
+      padding: 52px 24px 44px;
+      text-align: center;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: rgba(247, 147, 26, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(247, 147, 26, 0.3);
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 16px;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 7vw, 46px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero-context {
+      font-size: 13px;
+      color: var(--text-dim);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero-sub {
+      color: var(--text-muted);
+      font-size: 15px;
+      max-width: 500px;
+      margin: 0 auto 30px;
+      line-height: 1.6;
+    }
+
+    .hero-meta {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .meta-pill {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 5px 12px;
+    }
+
+    .meta-pill strong {
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .section {
+      margin-top: 52px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .section-number {
+      background: var(--accent);
+      color: #000;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 4px;
+      padding: 2px 7px;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+
+    .section-header h2 {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .callout {
+      background: rgba(247, 147, 26, 0.07);
+      border: 1px solid rgba(247, 147, 26, 0.25);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 20px;
+    }
+
+    .callout p {
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .callout p strong {
+      color: var(--accent);
+    }
+
+    .callout-blue {
+      background: rgba(96, 165, 250, 0.07);
+      border-color: rgba(96, 165, 250, 0.25);
+      border-left-color: var(--blue);
+    }
+
+    .callout-blue p strong {
+      color: var(--blue);
+    }
+
+    .callout-green {
+      background: rgba(34, 197, 94, 0.07);
+      border-color: rgba(34, 197, 94, 0.25);
+      border-left-color: var(--green);
+    }
+
+    ul.clean {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    ul.clean li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    ul.clean li:last-child {
+      border-bottom: none;
+    }
+
+    ul.clean li .icon {
+      flex-shrink: 0;
+      font-size: 15px;
+      margin-top: 1px;
+    }
+
+    .own-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+
+    .own-card-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .own-card-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .own-card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .own-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .own-card ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+
+    .own-card ul li {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 4px 0;
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .own-card ul li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .not-this {
+      background: var(--surface);
+      border: 1px solid rgba(239, 68, 68, 0.15);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 10px;
+    }
+
+    .not-this p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .not-this p strong {
+      color: #ef4444;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    .must-have-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+
+    .must-have-card h4 {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .must-have-card.green h4 { color: var(--green); }
+    .must-have-card.yellow h4 { color: #facc15; }
+
+    .must-have-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .must-have-card ul li {
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      line-height: 1.5;
+    }
+
+    .must-have-card ul li:last-child { border-bottom: none; }
+    .must-have-card ul li::before {
+      content: '—';
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+
+    .flag-card {
+      background: var(--surface);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 10px;
+    }
+
+    .flag-card h4 {
+      color: var(--red);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .flag-card p {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .green-flag-card {
+      background: var(--surface);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 10px;
+    }
+
+    .green-flag-card h4 {
+      color: var(--green);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .green-flag-card p {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .pipeline-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pipeline-step:last-child { border-bottom: none; }
+
+    .step-num {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-body h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .step-body p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .step-body .timeline {
+      display: inline-block;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 11px;
+      color: var(--text-dim);
+      padding: 2px 8px;
+      margin-top: 6px;
+      font-family: var(--mono);
+    }
+
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .tech-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .tech-item .t-label {
+      font-size: 11px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .tech-item .t-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .test-project {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .test-project-header {
+      background: rgba(247, 147, 26, 0.1);
+      border-bottom: 1px solid rgba(247, 147, 26, 0.2);
+      padding: 16px 20px;
+    }
+
+    .test-project-header h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .test-project-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .test-project-body {
+      padding: 20px;
+    }
+
+    .test-project-body h4 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin: 18px 0 8px;
+    }
+
+    .test-project-body h4:first-child { margin-top: 0; }
+
+    .test-project-body p {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .test-project-body ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .test-project-body ul li {
+      font-size: 14px;
+      color: var(--text-muted);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .test-project-body ul li:last-child { border-bottom: none; }
+
+    .test-project-body ul li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    code {
+      font-family: var(--mono);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 12px;
+      padding: 1px 6px;
+      color: #c4b5fd;
+    }
+
+    .apply-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .apply-step:last-child { border-bottom: none; }
+
+    .apply-step-num {
+      background: var(--accent);
+      color: #000;
+      font-size: 12px;
+      font-weight: 800;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .apply-step-body h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .apply-step-body p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .comp-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+
+    .comp-block h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .comp-block p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .comp-block p strong {
+      color: var(--text);
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 32px 0;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 12px;
+      padding: 32px 24px 0;
+    }
+
+    footer strong {
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 600px) {
+      .hero { padding: 40px 20px 36px; }
+      .section { margin-top: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">Contract Role · Remote · Bitcoin-Aligned</div>
+    <h1><span>Alfred</span> — AI Infrastructure Operator</h1>
+    <p class="hero-context">Brad Mills / POW Media / Citadel OS</p>
+    <p class="hero-sub">
+      This is not a traditional AI engineering job. I've built a sophisticated AI infrastructure that handles most of my operations. I need someone to own it — keep it running, evolve it, and make sure it never breaks.
+    </p>
+    <div class="hero-meta">
+      <div class="meta-pill"><strong>Role:</strong> AI Infrastructure Operator</div>
+      <div class="meta-pill"><strong>Type:</strong> Contract → Retainer</div>
+      <div class="meta-pill"><strong>Location:</strong> Remote (Anywhere)</div>
+      <div class="meta-pill"><strong>Hours:</strong> ~15–25 hrs/wk to start</div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- SECTION 1: THE ROLE -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>The Role</h2>
+      </div>
+
+      <div class="callout">
+        <p>
+          <strong>This is not an exploration role.</strong> The problems are already defined. The infrastructure exists. I've spent significant time and resources building an AI agent system that runs 24/7 on a Mac Studio here at the Citadel — handling daily ops, research pipelines, Telegram coordination, knowledge base management, scheduled workflows, and more.
+        </p>
+      </div>
+
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 16px;">You're not inheriting a clean system. You're inheriting a sophisticated one that needs a dedicated operator to own it.</p>
+
+      <div class="card">
+        <h3>What you'll actually do on a Tuesday</h3>
+        <p>A cron job failed overnight. You notice before I do. You diagnose the broken skill, patch it, test it, push the fix, and drop me a three-line Telegram summary of what broke and why it won't happen again. I don't know it happened until you tell me it's already fixed.</p>
+      </div>
+
+      <div class="card">
+        <h3>What you'll actually do on a Thursday</h3>
+        <p>I want to automatically pull Bitcoin market signals into my morning briefing and flag anything above a custom threshold. You scope it in an hour, build it in two, test it, document it, and have it running before the weekend. I gave you one sentence. You shipped a feature.</p>
+      </div>
+
+      <div class="card">
+        <h3>What you'll actually do on a Saturday morning</h3>
+        <p>Nothing. Because the system is running. That's the goal.</p>
+      </div>
+
+      <hr class="divider" style="margin: 28px 0 22px;" />
+
+      <p style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 16px;">Day-to-day responsibilities</p>
+
+      <ul class="clean">
+        <li>
+          <span class="icon">🗼</span>
+          <span><strong>Air traffic control:</strong> Model routing, channel-based context window management, cron job orchestration, and subagent architecture. You're the one who decides what model handles what, when, and why.</span>
+        </li>
+        <li>
+          <span class="icon">⚙️</span>
+          <span><strong>System health:</strong> Monitor and maintain the OpenClaw AI agent stack — skills, plugins, integrations, Telegram bots, and webhook pipelines. Uptime is your responsibility.</span>
+        </li>
+        <li>
+          <span class="icon">🔧</span>
+          <span><strong>Triage and fix:</strong> When something breaks, you own it end-to-end. Diagnose, patch, test, document. No ticket systems. No status meetings. Just fixed.</span>
+        </li>
+        <li>
+          <span class="icon">🏗️</span>
+          <span><strong>Build new capabilities:</strong> As my needs evolve, you build new skills, integrations, and pipelines. Bitcoin research feeds, media publishing workflows, portfolio alerts, knowledge base updates — whatever moves the mission forward.</span>
+        </li>
+        <li>
+          <span class="icon">🔐</span>
+          <span><strong>Security and hygiene:</strong> Local-first mindset. Encrypted storage. No credentials in logs. No cloud dependencies where self-hosted is viable. You keep the castle locked.</span>
+        </li>
+        <li>
+          <span class="icon">📦</span>
+          <span><strong>Self-hosted tool management:</strong> Maintain and expand the self-hosted stack — Tailscale, 1Password CLI, Ollama for local models, SearXNG, and whatever else earns its place. When a better open-source option exists, you evaluate and migrate.</span>
+        </li>
+        <li>
+          <span class="icon">⚡</span>
+          <span><strong>Bitcoin/Lightning infrastructure:</strong> Manage Alby Hub and Lightning payment integrations. Understand why this layer matters — not just how it works mechanically.</span>
+        </li>
+        <li>
+          <span class="icon">🤖</span>
+          <span><strong>Model curation:</strong> Stay current on AI model releases. Know when to upgrade, when to stay put, and when a new model changes the playbook. Be my radar.</span>
+        </li>
+        <li>
+          <span class="icon">📝</span>
+          <span><strong>Knowledge base maintenance:</strong> The agent system's memory and context files are critical infrastructure. You keep them accurate, organized, and useful.</span>
+        </li>
+        <li>
+          <span class="icon">💬</span>
+          <span><strong>Async communication:</strong> We work via Telegram. Concise status updates. Problems surface with solutions attached. You over-deliver and under-complicate.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- SECTION 2: WHAT YOU'LL OWN -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What You'll Own</h2>
+      </div>
+
+      <div class="callout">
+        <p>
+          This isn't a vague "work on AI stuff" role. Here are the specific systems you'll be responsible for from day one.
+        </p>
+      </div>
+
+      <div class="own-card">
+        <div class="own-card-header">
+          <span class="own-card-icon">🦾</span>
+          <h3>OpenClaw — Agent Orchestration Platform</h3>
+        </div>
+        <p>The core platform everything runs on. Skills-based architecture in Node.js/TypeScript. You'll write, debug, and maintain modular skill files that give the AI agent specific capabilities. When skills break, you fix them. When new capabilities are needed, you build them.</p>
+      </div>
+
+      <div class="own-card">
+        <div class="own-card-header">
+          <span class="own-card-icon">⚡</span>
+          <h3>Sene — Primary AI Executive Assistant</h3>
+        </div>
+        <p>My AI executive assistant runs on OpenClaw with semantic memory, DAG-based context compaction via lossless-claw, and persistent identity across sessions. This isn't a stateless chatbot — it's a system with institutional memory that I depend on daily. You keep it sharp, healthy, and current.</p>
+        <ul>
+          <li>Maintain and evolve SOUL.md, AGENTS.md, memory files, and context architecture</li>
+          <li>Debug compaction failures and context window issues</li>
+          <li>Ensure session continuity and memory integrity across restarts</li>
+        </ul>
+      </div>
+
+      <div class="own-card">
+        <div class="own-card-header">
+          <span class="own-card-icon">📚</span>
+          <h3>Dan Martell Knowledge Base</h3>
+        </div>
+        <p>A structured knowledge base built from 240+ hours of coaching content. This powers strategic decision-making and contextual guidance inside the agent system. You maintain the RAG pipeline, keep embeddings current, and ensure retrieval quality stays high.</p>
+        <ul>
+          <li>Vector database maintenance and re-indexing</li>
+          <li>Retrieval quality monitoring</li>
+          <li>Expanding the KB as new content is added</li>
+        </ul>
+      </div>
+
+      <div class="own-card">
+        <div class="own-card-header">
+          <span class="own-card-icon">🎬</span>
+          <h3>POW Media — Plugin &amp; Skill Development</h3>
+        </div>
+        <p>My media company runs automation workflows on top of the agent stack. Content pipelines, publishing integrations, research automation, and distribution tooling. You build and maintain the specific skills that power POW Media's operations.</p>
+        <ul>
+          <li>Content pipeline automation and scheduling</li>
+          <li>Publishing and distribution workflow integrations</li>
+          <li>Bitcoin market signal feeds and briefing systems</li>
+        </ul>
+      </div>
+
+      <div class="own-card">
+        <div class="own-card-header">
+          <span class="own-card-icon">🔒</span>
+          <h3>Self-Hosted Infrastructure</h3>
+        </div>
+        <p>Tailscale for private networking, 1Password CLI for secrets, Ollama for local model inference, SearXNG for private search, Alby Hub for Lightning payments. The whole sovereign stack. You maintain it, expand it, and evaluate what earns its place.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 3: WHAT THIS IS NOT -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>What This Is Not</h2>
+      </div>
+
+      <div class="not-this">
+        <p><strong>Not an exploration role.</strong> I'm not hiring someone to figure out whether AI could help my business. That question is already answered. The infrastructure exists. Your job is to operate and extend it — not to start the conversation.</p>
+      </div>
+
+      <div class="not-this">
+        <p><strong>Not a research position.</strong> You won't be writing papers, evaluating theoretical architectures, or running experiments to understand LLM capabilities. You'll be shipping things that work in production.</p>
+      </div>
+
+      <div class="not-this">
+        <p><strong>Not a "help me understand AI" role.</strong> I already understand enough to know what I need built. I need someone who can build it, not someone who starts every conversation with an explanation of how large language models work.</p>
+      </div>
+
+      <div class="not-this">
+        <p><strong>Not a managed position.</strong> There are no daily standups. No sprint reviews. No tickets assigned to you. You'll have clear outcomes and high autonomy. If you need a manager to tell you what to do next, this will be uncomfortable.</p>
+      </div>
+
+      <div class="not-this">
+        <p><strong>Not a traditional software engineering role.</strong> You won't be working on a clean greenfield codebase with perfect specs. You'll be inside a living system that evolved fast. You need to get oriented quickly, understand how things actually work, and operate confidently in imperfect conditions.</p>
+      </div>
+
+      <div class="callout callout-green" style="margin-top: 20px; margin-bottom: 0;">
+        <p>
+          <strong style="color: var(--green);">The upside of all that:</strong> Real ownership. A production system that actually matters. Work that directly impacts how a Bitcoin-native family office operates. And if you're excellent — room to grow into something more significant than a contract role.
+        </p>
+      </div>
+    </div>
+
+    <!-- SECTION 4: WHO YOU ARE -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Who You Are</h2>
+      </div>
+
+      <div class="callout">
+        <p>
+          <strong>I hire the soul, train for the role.</strong> I'd rather have someone who has shipped real AI systems with 80% of the required skills than someone with a perfect résumé who's never debugged a failed webhook at 2am. Demonstrated work beats credentials every time.
+        </p>
+      </div>
+
+      <ul class="clean">
+        <li>
+          <span class="icon">🛠️</span>
+          <span><strong>You've shipped working AI in production.</strong> Not demos. Not prototypes with 0 stars. Things that actually ran, actually worked, actually helped someone. You know what it feels like to own a live system over time.</span>
+        </li>
+        <li>
+          <span class="icon">⌨️</span>
+          <span><strong>You're CLI-first.</strong> The terminal is your natural habitat. You don't reach for a GUI when a command works faster. You're comfortable with bash, zsh, and the macOS environment at the system level.</span>
+        </li>
+        <li>
+          <span class="icon">🧠</span>
+          <span><strong>You think in systems, not features.</strong> When I ask you to add a capability, your first question is "how does this fit the architecture?" not "which library should I use?" You care about how the pieces connect.</span>
+        </li>
+        <li>
+          <span class="icon">🗣️</span>
+          <span><strong>You can explain technical things to a non-technical founder in plain language.</strong> Not dumbed down — translated. I need to understand what you're doing and why. If you can't give me the three-sentence version, we have a problem.</span>
+        </li>
+        <li>
+          <span class="icon">⚡</span>
+          <span><strong>You move fast.</strong> When something's broken, you orient quickly, try things, and solve it. You don't wait for more information before starting. You scope, build, ship, and measure.</span>
+        </li>
+        <li>
+          <span class="icon">✍️</span>
+          <span><strong>You document as you go.</strong> Not essays. Just enough that the next person (or future-you) knows exactly what happened and why. Commit messages matter. Context files are infrastructure.</span>
+        </li>
+        <li>
+          <span class="icon">🔒</span>
+          <span><strong>Security is a reflex.</strong> You don't hardcode credentials. You don't push secrets to GitHub. You think about failure modes before you build, not after.</span>
+        </li>
+        <li>
+          <span class="icon">₿</span>
+          <span><strong>You're Bitcoin-aware, or genuinely curious about it.</strong> You understand why local-first and self-sovereign tooling matters. You're not allergic to a strong worldview. Bitcoin-native is a meaningful plus — not because we talk about price, but because the values align.</span>
+        </li>
+        <li>
+          <span class="icon">🤝</span>
+          <span><strong>You're a high-trust operator.</strong> This role sits deep inside my digital infrastructure. You have access to sensitive systems. You treat that as a responsibility, not a perk. You're the kind of person I can leave running without checking in.</span>
+        </li>
+      </ul>
+
+      <div style="margin-top: 20px;">
+        <p style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-bottom: 14px;">Technical requirements</p>
+
+        <div class="two-col">
+          <div class="must-have-card green">
+            <h4>✅ Must-Have</h4>
+            <ul>
+              <li>Python and/or TypeScript — actually fluent, not just familiar</li>
+              <li>Shipped LLM integrations in production (Anthropic or OpenAI API)</li>
+              <li>Prompt engineering fluency — system prompts, context windows, RAG</li>
+              <li>API architecture and debugging without hand-holding</li>
+              <li>Agent frameworks (any — LangChain, custom, etc.)</li>
+              <li>Vector databases (basics — retrieval, indexing, quality)</li>
+              <li>Cloud infra basics (VPS, networking, self-hosted services)</li>
+              <li>Git fluency — clean commits, meaningful messages</li>
+              <li>macOS + CLI proficiency (bash/zsh at a system level)</li>
+              <li>Security-conscious — secrets handling, local-first thinking</li>
+            </ul>
+          </div>
+          <div class="must-have-card yellow">
+            <h4>⭐ Nice-to-Have</h4>
+            <ul>
+              <li>OpenClaw experience — significant advantage if you have it</li>
+              <li>Bitcoin-native or Lightning Network familiarity</li>
+              <li>Self-hosted stack experience (Ollama, Tailscale, SearXNG)</li>
+              <li>Telegram Bot API development</li>
+              <li>macOS launchd / cron automation</li>
+              <li>Open-source LLM experience (Mistral, Llama, etc.)</li>
+              <li>1Password CLI or secrets manager integration</li>
+              <li>Obsidian or markdown-based knowledge system management</li>
+              <li>Subagent architecture and multi-agent coordination</li>
+              <li>Any prior high-trust personal ops or family office role</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: RED FLAGS -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Red Flags We're Watching For</h2>
+      </div>
+
+      <div class="callout">
+        <p>I'd rather lose a good candidate by being transparent than hire the wrong person and have them inside my infrastructure. So here's exactly what gets you rejected:</p>
+      </div>
+
+      <div class="flag-card">
+        <h4>🚩 "I'm very interested in AI" with no shipped work</h4>
+        <p>Interest is table stakes. I need results. If the most impressive AI thing you've built is a ChatGPT wrapper with three stars on GitHub, this isn't the right role yet. Come back when you've got something real running in production.</p>
+      </div>
+
+      <div class="flag-card">
+        <h4>🚩 Only enterprise / large-team experience</h4>
+        <p>This is a lean, high-trust role. If you've only operated inside large orgs with dedicated DevOps, QA, and security teams, the autonomy and context-switching here will be uncomfortable. You need to be a one-person ops department.</p>
+      </div>
+
+      <div class="flag-card">
+        <h4>🚩 Can't explain your own work simply</h4>
+        <p>If I ask you to explain what a skill file does and you need 10 minutes and a diagram, that's a problem. I need someone who can give me the three-sentence version. Always.</p>
+      </div>
+
+      <div class="flag-card">
+        <h4>🚩 Wants to "explore" before committing to outcomes</h4>
+        <p>We don't explore here. We scope, build, ship, and measure. If your default response to a new request is "interesting — I'd need to research this" before you've even tried, we're not a fit.</p>
+      </div>
+
+      <div class="flag-card">
+        <h4>🚩 No GitHub / portfolio / public evidence of work</h4>
+        <p>I can't verify you're real or capable without evidence. Given that 50%+ of developer applicants right now are AI-generated or resume-inflated, you need something concrete I can look at. A live tool, a GitHub profile, a project with actual commits — something.</p>
+      </div>
+
+      <div class="flag-card">
+        <h4>🚩 Discomfort with high trust and access</h4>
+        <p>This role sits inside my digital life. If you're not comfortable handling sensitive systems responsibly — or if you need a lot of reassurance about what you're allowed to do — this is the wrong fit. I need someone who treats access as a responsibility, not a perk.</p>
+      </div>
+
+      <div class="flag-card">
+        <h4>🚩 Needs a roadmap before starting anything</h4>
+        <p>My world moves fast and changes direction. If you can't operate without a perfect spec, this will be frustrating for both of us. I give you outcomes. You figure out the path.</p>
+      </div>
+
+      <hr class="divider" style="margin: 24px 0 20px;" />
+      <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 14px;">Green flags that get you to the front of the line:</p>
+
+      <div class="green-flag-card">
+        <h4>✅ Problem-first thinking</h4>
+        <p>You lead with "what's the actual problem?" before talking about technology. You ask one clarifying question when you need it, then go build.</p>
+      </div>
+
+      <div class="green-flag-card">
+        <h4>✅ You've maintained something running in production</h4>
+        <p>Not built once and forgot. Maintained. Debugged. Improved over time. You know what it feels like to own a live system.</p>
+      </div>
+
+      <div class="green-flag-card">
+        <h4>✅ You surface problems with solutions already attached</h4>
+        <p>"Here's a thing I noticed, here's what I think caused it, here's what I recommend, here's what it'll take." Not: "hey did you see that thing?"</p>
+      </div>
+
+      <div class="green-flag-card">
+        <h4>✅ You have opinions about tools and can defend them</h4>
+        <p>You have a point of view. You can tell me why you'd choose one approach over another, and you can update that view when new information comes in. Opinionated but not precious.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 6: HIRING PROCESS -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>The Hiring Process</h2>
+      </div>
+
+      <div class="callout">
+        <p>
+          <strong>I can't work with you till I work with you.</strong> This process is designed to find out what you're actually like before we commit to each other. It's fast if you're the right person. It has exit points for everyone else.
+        </p>
+      </div>
+
+      <div class="card" style="padding: 4px 12px;">
+        <div class="pipeline-step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <h4>Application Review</h4>
+            <p>We read your application. We look at your GitHub. We check if you followed the instructions. 90% of applicants are filtered here — not by resume, but by evidence of real work and ability to follow a specific process. You either have something to show or you don't.</p>
+            <span class="timeline">Timeline: 48–72 hrs</span>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <h4>Video Request (Async)</h4>
+            <p>Three specific questions to answer on video. 3–5 minutes total. We're not looking for polish — we're looking for how you think out loud. Can you explain a technical concept clearly? Can you be honest about something you didn't know how to do and how you solved it?</p>
+            <span class="timeline">Timeline: You have 48 hrs to submit</span>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <h4>Talent Screening (30 min)</h4>
+            <p>Quick call with our ops team. Culture fit, availability, logistics, basic technical orientation. We're confirming you're who you said you are and that the basics work: time zone, communication style, rate expectations. No trick questions.</p>
+            <span class="timeline">Timeline: Within 1 week of video submission</span>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <h4>Technical Review</h4>
+            <p>We'll send you a technical brief: a description of a real problem from the OpenClaw stack with relevant code snippets and context. You write back with your diagnosis and proposed approach. Async, no time limit — should take 30–60 minutes. We're evaluating: do you understand the problem, is your approach sound, can you communicate it clearly?</p>
+            <span class="timeline">Timeline: You have 72 hrs to respond</span>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <h4>Hiring Manager Interview (45 min)</h4>
+            <p>A deeper conversation about your background, how you think, and what you've actually built. We'll go deep on one or two specific projects from your portfolio. Be ready to walk through your work in detail: what broke, what you learned, how you'd do it differently. No generic answers accepted.</p>
+            <span class="timeline">Timeline: Within 1 week of technical review</span>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-num">6</div>
+          <div class="step-body">
+            <h4>Paid Test Project</h4>
+            <p>This is the real filter. A real task from the actual OpenClaw system. $400 USD. 6 hours. Sandboxed environment. We evaluate: did it work, how clean is the code, did you document it, did you show initiative beyond the spec? Full details in the next section.</p>
+            <span class="timeline">Timeline: Scheduled within 2 weeks, you pick the 6-hr window</span>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-num">7</div>
+          <div class="step-body">
+            <h4>Brad Call (20 min)</h4>
+            <p>If you've made it here, you're close. Short direct conversation with Brad — not a formal interview, more of a "let's make sure this feels right on both sides" call. Brad will tell you what he's building and what working together actually looks like. You should have questions.</p>
+            <span class="timeline">Timeline: Within 1 week of test project review</span>
+          </div>
+        </div>
+
+        <div class="pipeline-step">
+          <div class="step-num">8</div>
+          <div class="step-body">
+            <h4>Offer &amp; Onboarding</h4>
+            <p>Contract terms, rate, scope, communication protocols, access provisioning. We start with a 30-day engagement with clear deliverables. At 30 days we review and either expand or part ways. No ambiguity about expectations going in.</p>
+            <span class="timeline">Timeline: Rolling start date, goal is &lt;2 weeks from offer</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 12px; padding: 14px 16px; background: var(--surface2); border-radius: 8px; border: 1px solid var(--border);">
+        <p style="font-size: 13px; color: var(--text-muted);">⏱️ <strong style="color: var(--text);">Total timeline target: 4–6 weeks from application to start.</strong> We move fast when the person is right. If you don't hear back within the stated window for any stage, you can follow up once. After that, assume it's a no.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 7: TEST PROJECT -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>The Test Project</h2>
+      </div>
+
+      <div class="test-project">
+        <div class="test-project-header">
+          <h3>🔧 Fix the Broken Skill — $400 USD · 6 Hours · Real Code</h3>
+          <p>This is Stage 6 of the hiring process. It's paid. It's real. And it tells us everything we need to know.</p>
+        </div>
+        <div class="test-project-body">
+
+          <h4>The Setup</h4>
+          <p>You'll receive access to a sandboxed OpenClaw environment. Inside it, you'll find a skill file that is partially broken. The skill is designed to pull data from an external API, process it with an LLM prompt, and deliver a formatted summary to a Telegram channel via the agent system. It's failing in production — we'll tell you that much. The rest is yours to figure out.</p>
+
+          <h4>Specifically, you'll receive:</h4>
+          <ul>
+            <li>Access to the sandboxed OpenClaw instance (read/write on the relevant skill directory)</li>
+            <li>The broken skill file (<code>SKILL.md</code> + implementation) with no additional context</li>
+            <li>A test Telegram bot and channel for validation</li>
+            <li>OpenClaw documentation link and API keys for a sandboxed LLM endpoint</li>
+            <li>One (1) async question allowed — choose it wisely</li>
+          </ul>
+
+          <h4>Your Deliverables (6 hours):</h4>
+          <ul>
+            <li><strong>Working skill:</strong> The skill runs end-to-end without errors. We can trigger it, it does what it's supposed to do, and the output appears in the Telegram channel.</li>
+            <li><strong>Root cause writeup:</strong> A brief (200–400 word) Markdown file explaining what was broken, what caused it, and how you fixed it. Written for a non-technical reader who cares about the outcome, not the implementation details.</li>
+            <li><strong>One suggested improvement:</strong> One specific, concrete improvement to the skill beyond fixing the bug. Not a wishlist — an actual code change or architectural suggestion with brief rationale.</li>
+            <li><strong>Clean commits:</strong> Your work submitted via git with at least 2–3 commits with meaningful messages. We should be able to read your commit history and understand what you did.</li>
+          </ul>
+
+          <h4>How We Score It:</h4>
+          <ul>
+            <li><strong>Does it work?</strong> (Pass/fail — if the skill doesn't run, the rest doesn't matter)</li>
+            <li><strong>Code quality:</strong> Is it readable? Would you be comfortable if a senior engineer reviewed it tomorrow?</li>
+            <li><strong>Diagnosis accuracy:</strong> Did you correctly identify the root cause, or did you patch symptoms?</li>
+            <li><strong>Communication:</strong> Is the writeup clear, concise, and actually useful to a non-engineer?</li>
+            <li><strong>Initiative:</strong> Did you notice something beyond the spec? Did your improvement show real understanding of the system?</li>
+            <li><strong>Security:</strong> Did you introduce any new risks? Did you handle credentials and access correctly?</li>
+          </ul>
+
+          <h4>Important Notes:</h4>
+          <ul>
+            <li>You will be paid $400 USD regardless of outcome, within 48 hours of submission</li>
+            <li>Do not use the sandboxed environment for anything other than the task</li>
+            <li>AI coding assistants are fine to use — but you need to understand and own every line you submit</li>
+            <li>The 6-hour window starts when you confirm receipt of access. You pick the window; once started, the clock runs.</li>
+            <li>Submission is via git push + a direct Telegram message to the review channel</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 8: COMPENSATION -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-number">08</span>
+        <h2>Compensation &amp; Structure</h2>
+      </div>
+
+      <div class="comp-block">
+        <h3>Starting Rate</h3>
+        <p><strong>$75–$120 USD/hour</strong> depending on experience and what you demonstrate in the process. This is not a race to the bottom. If you're the right person, I'd rather pay fairly and get the best version of your work than underpay and get half of it.</p>
+      </div>
+
+      <div class="comp-block">
+        <h3>Hours &amp; Structure</h3>
+        <p>We start at <strong>~15–25 hours per week</strong> on retainer. Async-first. You pick your working hours as long as critical issues get same-day response and urgent issues get sub-2-hour response. As trust builds and scope grows, hours can expand.</p>
+      </div>
+
+      <div class="comp-block">
+        <h3>Contract Terms</h3>
+        <p>Initial <strong>30-day contract</strong> with defined deliverables. After 30 days: mutual review, then month-to-month retainer if we both want to continue. Either party can exit with 2 weeks notice after the initial period. No lock-ins. If you're delivering, you'll know it.</p>
+      </div>
+
+      <div class="comp-block">
+        <h3>Growth Path</h3>
+        <p>This role has a real ceiling — in the good direction. As the system grows, as the family office expands, as more integrations get built, the scope of this role grows with it. There's no artificial cap on what this becomes if you're excellent. Some people in roles like this become indispensable partners, not contractors. That's possible here.</p>
+      </div>
+
+      <div class="comp-block">
+        <h3>What We Don't Offer</h3>
+        <p>No equity at this stage. No benefits (it's a contract role). No guaranteed hours above the retainer floor. No hand-holding. If those things matter to you, this isn't the right fit right now.</p>
+      </div>
+
+      <div class="comp-block">
+        <h3>What You Do Get</h3>
+        <p>Direct access to a genuinely interesting and sophisticated AI system. Real ownership of a production environment. Work that matters. A principal who respects your time, pays on time, and won't make you sit in status meetings. And if you're excellent — real room to grow.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 9: HOW TO APPLY -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-number">09</span>
+        <h2>How to Apply</h2>
+      </div>
+
+      <div class="callout">
+        <p>
+          <strong>The application is itself a filter.</strong> If you can't follow these instructions carefully, you won't make it past Stage 1. This isn't bureaucracy — it's a real signal of whether you read things carefully and do exactly what's asked. Every detail below is intentional.
+        </p>
+      </div>
+
+      <div class="card" style="padding: 4px 12px;">
+        <div class="apply-step">
+          <div class="apply-step-num">1</div>
+          <div class="apply-step-body">
+            <h4>Email the subject line exactly</h4>
+            <p>Send your application to <strong>team@bradmills.ca</strong> with the subject line: <code>Alfred Application — [Your First Name] — [One sentence about the most interesting AI thing you've built]</code>. If the subject line doesn't match this format, it goes to the bin automatically.</p>
+          </div>
+        </div>
+
+        <div class="apply-step">
+          <div class="apply-step-num">2</div>
+          <div class="apply-step-body">
+            <h4>Record a 2–5 minute video</h4>
+            <p>No slides. No screen share. Just you, talking to camera. Include the link in your email.</p>
+            <p style="margin-top: 8px;"><strong>Cover these three things:</strong></p>
+            <p>
+              1. <strong>Walk me through the most complex AI system you've built or maintained</strong> — what it does, how it works, and what broke along the way.<br /><br />
+              2. <strong>Why this role specifically</strong> — not "I love AI," but what about this setup makes you want in.<br /><br />
+              3. <strong>Show me one thing you've built.</strong> Pull it up, walk me through it. 60 seconds max on the demo.
+            </p>
+            <p style="margin-top: 8px; font-size: 13px; color: var(--text-muted);">Loom, YouTube (unlisted), Google Drive — I don't care how you host it. If you can't figure out how to record and share a short video, you can't operate AI infrastructure. <strong style="color: var(--accent);">No video = automatic rejection.</strong></p>
+          </div>
+        </div>
+
+        <div class="apply-step">
+          <div class="apply-step-num">3</div>
+          <div class="apply-step-body">
+            <h4>Include exactly three things in the body</h4>
+            <p>
+              1. <strong>Two paragraphs max</strong> on why you're the right person for this role. Not your life story. Not a cover letter. Two paragraphs. What have you built, and why does this role fit?<br /><br />
+              2. <strong>One link to your best piece of AI work</strong> — a GitHub repo, a live tool, a write-up with code, something concrete. If you don't have anything to link, apply again when you do.<br /><br />
+              3. <strong>Your current hourly rate</strong> and available hours per week.
+            </p>
+          </div>
+        </div>
+
+        <div class="apply-step">
+          <div class="apply-step-num">4</div>
+          <div class="apply-step-body">
+            <h4>Answer this question at the end</h4>
+            <p>At the bottom of your email, after everything else, answer this in 2–3 sentences: <em>"A cron job that sends a daily Bitcoin price summary to a Telegram channel has been silently failing for 3 days. The bot shows as online. Where do you look first?"</em> If you skip this, your application is automatically rejected regardless of everything else.</p>
+          </div>
+        </div>
+
+        <div class="apply-step">
+          <div class="apply-step-num">5</div>
+          <div class="apply-step-body">
+            <h4>Don't do these things</h4>
+            <p>No attachments (no PDFs, no resumes). No "I'm a fast learner" language. No "I'm passionate about AI." No "I'm happy to learn whatever stack you use." Tell me what you've built, show me evidence, answer the question. That's the whole application.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; background: var(--surface2); border-radius: 10px; border: 1px solid var(--border); padding: 20px; text-align: center;">
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">We review applications on a rolling basis. Strong candidates move fast.</p>
+        <p style="font-size: 15px; font-weight: 700; color: var(--text);">📬 team@bradmills.ca</p>
+        <p style="font-size: 13px; color: var(--text-dim); margin-top: 8px;">No recruiters. No agencies. Real humans only.</p>
+      </div>
+    </div>
+
+    <!-- CLOSING -->
+    <div class="section">
+      <div class="callout callout-blue">
+        <p>
+          The AI infrastructure I've built handles things most people haven't thought to automate yet. It's genuinely sophisticated — and it needs a human who can keep it running, push it forward, and make it better. <strong>That human needs to be excellent, trustworthy, and technically sharp.</strong> If that's actually you — not the resume version of you — I want to hear from you.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>
+      <strong>Brad Mills / POW Media / Citadel OS</strong> · Mount Brydges, Ontario<br />
+      <span style="color: var(--text-dim);">Bitcoin-first family office · AI-native operations · High-trust team only</span>
+    </p>
+    <p style="margin-top: 12px; color: var(--text-dim);">Document prepared March 2026 · Internal hiring use</p>
+  </footer>
+
+</body>
+</html>
