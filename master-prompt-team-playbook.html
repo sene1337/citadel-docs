@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Master Prompt — Team Build Playbook</title>
+<style>
+:root { --bg:#0d0f14; --surface:#161921; --surface2:#1e2230; --border:#2a2f42; --accent:#f7931a; --text:#e4e6ed; --muted:#8a91a8; --green:#3ecf8e; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; line-height:1.65; padding:32px 18px 72px; }
+.container { max-width:850px; margin:0 auto; }
+.hero { background:linear-gradient(160deg,#1a1206,#11151d 55%,#0d0f14); border:1px solid var(--border); border-radius:14px; padding:42px 28px; margin-bottom:24px; box-shadow:0 8px 32px rgba(0,0,0,.35); }
+.eyebrow { color:var(--accent); font-size:.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.14em; margin-bottom:10px; }
+h1 { margin:0; color:#fff; font-size:clamp(2rem,5vw,3.1rem); line-height:1.08; }
+.subtitle { color:var(--muted); margin-top:14px; max-width:680px; }
+.actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:22px; }
+.btn { color:#111; background:var(--accent); padding:10px 14px; border-radius:8px; text-decoration:none; font-weight:700; }
+.btn.secondary { background:transparent; color:var(--accent); border:1px solid var(--accent); }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:26px 28px; }
+h2 { color:#fff; margin:32px 0 12px; font-size:1.45rem; border-top:1px solid var(--border); padding-top:24px; }
+h2:first-child { border-top:0; padding-top:0; margin-top:0; }
+h3 { color:#fff; margin:24px 0 8px; font-size:1.1rem; }
+p,li { color:var(--text); }
+ul,ol { padding-left:1.35rem; }
+li { margin:.45rem 0; }
+strong { color:#fff; }
+blockquote { margin:18px 0; padding:16px 18px; background:var(--surface2); border-left:4px solid var(--accent); border-radius:8px; color:#fff; }
+code { background:var(--surface2); color:#fff; padding:2px 5px; border-radius:4px; }
+.table-wrap { overflow-x:auto; margin:18px 0; border:1px solid var(--border); border-radius:10px; }
+table { width:100%; border-collapse:collapse; min-width:620px; }
+th,td { padding:10px 12px; border-bottom:1px solid var(--border); text-align:left; vertical-align:top; }
+th { color:var(--accent); background:var(--surface2); font-size:.88rem; }
+.footer { color:var(--muted); text-align:center; font-size:.85rem; margin-top:28px; }
+@media(max-width:640px){ body{padding:18px 12px 48px} .hero,.card{padding:24px 18px} }
+</style>
+</head>
+<body>
+<div class="container">
+<section class="hero">
+<div class="eyebrow">Internal Team Playbook</div>
+<h1>Master Prompt<br>Team Build Playbook</h1>
+<p class="subtitle">A one-page rollout guide for every role to build and maintain a reusable Master Prompt for ChatGPT, Claude, Manus, and other AI tools.</p>
+<div class="actions"><a class="btn" href="master-prompt-team-playbook.pdf">Download PDF</a><a class="btn secondary" href="index.html">All Citadel Docs</a></div>
+</section>
+<main class="card">
+<h1>Master Prompt — Team Build Playbook</h1>
+<p><strong>Action item: every role builds their Master Prompt this week.</strong></p>
+<h2>Why we&#x27;re doing this</h2>
+<p>Every time you start a new chat with ChatGPT, Claude, Manus, or any AI tool, the model has zero context about who you are, what your role is, what we&#x27;re building, or what we&#x27;ve decided. You spend 30+ seconds re-explaining yourself on every prompt — multiplied across hundreds of prompts a week. A Master Prompt is a one-time document that captures all of that. Drop it into any tool. The AI now operates like a senior consultant who has worked with us for years. This is the highest-leverage 45-minute setup we&#x27;ll do this quarter.</p>
+<h2>Build your MP this week (45-minute setup)</h2>
+<ol>
+<li><strong>Open ChatGPT (or Claude — whichever you use most).</strong> Voice mode preferred. Don&#x27;t type if you can avoid it.</li>
+</ol>
+<ol>
+<li><strong>Paste this prompt verbatim:</strong></li>
+</ol>
+<p>   &gt; <em>I&#x27;m the [role] at [company name]. We do [one-line description of what the company does]. Here&#x27;s our revenue tier: [stage]. Here&#x27;s our customer base: [who]. Here&#x27;s how we monetize: [model]. Here&#x27;s all the details about me. Create a master prompt for my role. Ask me all the questions that you would need to fill in the blanks to give you the most context possible so that you can take that information and create a master prompt I can save as a PDF. Go.</em></p>
+<ol>
+<li><strong>Answer every question it asks.</strong> Voice-dictate where possible. Don&#x27;t overthink — first instinct is usually right. Expect 20-45 minutes of back-and-forth.</li>
+</ol>
+<ol>
+<li><strong>At the end, type:</strong> <em>&quot;generate the master prompt as a downloadable PDF.&quot;</em></li>
+</ol>
+<ol>
+<li><strong>Save the PDF</strong> to <code>[shared drive folder]/master-prompts/[your-name]-[role]-mp-2026-05-04.pdf</code></li>
+</ol>
+<h2>What the MP should cover (the 9 categories)</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>#</th><th>Category</th><th>What goes here</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Company context</td><td>What we do, revenue stage, customer base, monetization</td></tr>
+<tr><td>2</td><td>Your role</td><td>Title, scope, what you own, what you don&#x27;t</td></tr>
+<tr><td>3</td><td>Perspectives</td><td>How you think about the work (your operating beliefs)</td></tr>
+<tr><td>4</td><td>Use cases</td><td>What you&#x27;ll typically use AI for in your role</td></tr>
+<tr><td>5</td><td>Core values</td><td>Personal + company</td></tr>
+<tr><td>6</td><td>Team / staff</td><td>Who reports to you, who you report to, key collaborators</td></tr>
+<tr><td>7</td><td>Preferences &amp; constraints</td><td>What you like, won&#x27;t do, have to work around</td></tr>
+<tr><td>8</td><td>Vision</td><td>Where you&#x27;re going (3-year, 1-year, current quarter rocks)</td></tr>
+<tr><td>9</td><td>Impact</td><td>What you&#x27;re trying to achieve in the world</td></tr>
+</tbody>
+</table></div>
+<h2>Deploy it (do all four)</h2>
+<p>After your PDF is saved, load it into every AI tool you use:</p>
+<ul>
+<li>[ ] <strong>ChatGPT — Custom Instructions</strong> (Settings → Personalization → Custom Instructions). Paste the MP text. Now every chat starts with your context loaded.</li>
+<li>[ ] <strong>ChatGPT — Projects.</strong> Create a Project for your main work area. Upload the MP as a knowledge file. Use this Project for ongoing work.</li>
+<li>[ ] <strong>Claude — Project knowledge.</strong> Same pattern; upload the MP PDF as project context.</li>
+<li>[ ] <strong>Manus AI</strong> (if you use it). Set the MP as your operating context for any agent task.</li>
+</ul>
+<h2>Maintenance cadence</h2>
+<ul>
+<li><strong>Weekly review</strong> (5 min, end of week): does anything in your MP need updating? Quarterly rocks shifted? Team changed? Team additions get added; departures get removed.</li>
+<li><strong>Tie it to your existing weekly leadership sync.</strong> If you don&#x27;t have one, tie it to your Friday wrap.</li>
+<li><strong>Monthly:</strong> ask your AI tool: <em>&quot;Based on what I&#x27;ve worked on this month, what should I update in my master prompt?&quot;</em> Let it suggest the diff.</li>
+</ul>
+<h2>What to expect by end of month</h2>
+<p>If this is working:</p>
+<ul>
+<li>✅ You stop re-explaining yourself in every new chat.</li>
+<li>✅ AI responses feel role-specific — they reference your team members by name, your revenue stage, your current rocks.</li>
+<li>✅ You&#x27;re using AI for harder tasks (strategic decisions, hire/fire reasoning, content briefs) that you&#x27;d previously have done unaided.</li>
+<li>✅ At least one Custom GPT created from a system prompt you extracted (&quot;write me the system prompt that would have generated this output&quot;).</li>
+</ul>
+<p>If this is NOT working — i.e., you set up the MP but AI responses still feel generic — most likely cause: you set the MP up but didn&#x27;t actually load it into the tools. Check the deploy checklist above.</p>
+<h2>Did you do it?</h2>
+<p>Check off each step:</p>
+<ul>
+<li>[ ] I built my Master Prompt via voice dictation</li>
+<li>[ ] I saved the PDF to the shared drive</li>
+<li>[ ] I loaded it into ChatGPT Custom Instructions</li>
+<li>[ ] I loaded it into a ChatGPT Project</li>
+<li>[ ] I loaded it into Claude Project context</li>
+<li>[ ] I loaded it into Manus (if applicable)</li>
+<li>[ ] I scheduled my weekly 5-min MP review</li>
+</ul>
+<h2>If you want the full background</h2>
+<p>Watch the canonical Dan Martell YouTube on this: <strong>[&quot;How to Get Ahead of 99% of People (with AI)&quot;](https://www.youtube.com/watch?v=0tLHVyd7WtM)</strong> (21 min).</p>
+<p>The Master Prompt is hack #2 of 7. The other six are also worth your time, but the MP is the foundational one — everything else compounds with it.</p>
+<p>---</p>
+<p><em>Questions? DM me. Once you&#x27;ve built yours, post a confirmation in #ai-tools so the team knows where you are.</em></p>
+</main>
+<div class="footer">Generated from the Dan Martell KB • Published by Sene</div>
+</div>
+</body>
+</html>
