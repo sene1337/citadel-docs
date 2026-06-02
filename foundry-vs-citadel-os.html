@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Foundry vs OpenClaw/Citadel OS</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a33;--panel2:#182241;--text:#eef3ff;--muted:#aab7d6;--line:#2d3b66;--gold:#f5c451;--green:#63d38c;--red:#ff6b6b;--blue:#78a6ff;--violet:#b38cff}*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:radial-gradient(circle at 20% 0,#1a2856 0,#0b1020 36%,#070b16 100%);color:var(--text);line-height:1.55}a{color:var(--gold)}header{padding:56px 20px 32px;max-width:1180px;margin:auto}.eyebrow{color:var(--gold);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem}.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:end}h1{font-size:clamp(2.2rem,6vw,5.2rem);line-height:.95;margin:12px 0}.subtitle{font-size:clamp(1.05rem,2vw,1.35rem);color:var(--muted);max-width:780px}.verdict{background:linear-gradient(135deg,rgba(245,196,81,.18),rgba(120,166,255,.12));border:1px solid rgba(245,196,81,.35);border-radius:22px;padding:22px;box-shadow:0 18px 60px rgba(0,0,0,.25)}.verdict strong{color:var(--gold)}main{max-width:1180px;margin:auto;padding:0 20px 70px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card,section{background:rgba(18,26,51,.84);border:1px solid var(--line);border-radius:22px;padding:22px;margin:18px 0;box-shadow:0 12px 40px rgba(0,0,0,.22)}.card h3,section h2{margin-top:0}.muted{color:var(--muted)}.tag{display:inline-block;padding:4px 9px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:.82rem;margin:3px}.score{font-size:2rem;font-weight:800;color:var(--gold)}.matrix{overflow:auto;border-radius:16px;border:1px solid var(--line)}table{width:100%;border-collapse:collapse;min-width:860px;background:#0e162e}th,td{text-align:left;vertical-align:top;padding:13px;border-bottom:1px solid var(--line)}th{background:#182241;color:#fff;position:sticky;top:0}tr:last-child td{border-bottom:0}.status{font-weight:800}.proven{color:var(--green)}.plausible{color:var(--blue)}.fragile{color:var(--gold)}.aspirational{color:var(--red)}.columns{display:grid;grid-template-columns:1fr 1fr;gap:16px}.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.flow ol{padding-left:22px}.callout{border-left:5px solid var(--gold);background:#101936}.danger{border-left-color:var(--red)}.good{border-left-color:var(--green)}.blue{border-left-color:var(--blue)}ul{padding-left:22px}.footer{font-size:.9rem;color:var(--muted)}@media(max-width:860px){.hero,.grid,.columns,.flow{grid-template-columns:1fr}header{padding-top:34px}.card,section{padding:18px}table{font-size:.88rem}}
+</style>
+</head>
+<body>
+<header>
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Citadel Ops analysis · 2026-06-02</div>
+      <h1>Foundry vs OpenClaw vs Citadel OS</h1>
+      <p class="subtitle">A direct comparison of Darryl Hicks' Agent Foundry / Building Brit system against our 500-hour OpenClaw operating layer and the target Citadel OS blueprint.</p>
+      <p><span class="tag">Foundry</span><span class="tag">OpenClaw</span><span class="tag">Citadel OS</span><span class="tag">Agentic operating systems</span></p>
+    </div>
+    <div class="verdict">
+      <div class="eyebrow">Executive verdict</div>
+      <p><strong>Darryl's system is directionally right, but the public repo is not a working OS.</strong> It is a strong pattern library: principles, gates, schemas, archetypes, and sanitized examples.</p>
+      <p class="muted">Borrow the gates, schemas, role-spec discipline, and sanitized self-serve repo model. Do not blindly adopt the full agent org chart or assume the public artifacts prove runtime reliability.</p>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="grid">
+    <div class="card"><h3>Foundry as philosophy</h3><div class="score">9/10</div><p class="muted">The principles match our lived scars: durable memory, skills, gates, specialists, and proof over vibes.</p></div>
+    <div class="card"><h3>Public repo as pattern library</h3><div class="score">8/10</div><p class="muted">Clean, useful, self-serve templates. Strong for adaptation, not installation.</p></div>
+    <div class="card"><h3>Ready-to-run OS</h3><div class="score">3/10</div><p class="muted">The messy runtime layer is mostly absent: auth, delivery, compaction, rollback, routing, health checks.</p></div>
+  </div>
+
+  <section id="what-foundry-is">
+    <h2>What Darryl's system is</h2>
+    <p>The Agent Foundry is a framework-agnostic companion to <em>Building Brit</em>: a catalog of reusable patterns for founders building an AI operating layer. It includes ranked principles, fail-closed gates, security patterns, skill schemas, agent archetypes, tool specs, and pickup prompts another agent can use.</p>
+    <div class="columns">
+      <div><h3>Core thesis</h3><p class="muted">A chatbot answers. An agent remembers, acts, and compounds. The controllable pieces are personality, memory, skills, and tools.</p></div>
+      <div><h3>Specialist model</h3><p class="muted">Brit orchestrates; Victor engineers; Nora processes calls; Dex briefs; Ivy writes; Greg maintains runtime health.</p></div>
+    </div>
+  </section>
+
+  <section id="what-we-built">
+    <h2>What we've built in OpenClaw / Citadel Ops</h2>
+    <p>Our setup is already a complex OpenClaw operating layer: identity, memory, daily logs, decision ledger, regressions, SOPs, skills, Telegram routing, subagents, project registries, file janitor, lossless recall, and real workflows that survived pressure.</p>
+    <ul>
+      <li>Identity/persona files: SOUL, IDENTITY, USER, AGENTS, MEMORY.</li>
+      <li>Durable memory, daily logs, wiki/search, session recall.</li>
+      <li>Large active skill stack with progressive disclosure.</li>
+      <li>First-class tools for browser, messages, cron, nodes, gateway config, GitHub, PDFs, images, wallets, wiki, memory, sessions.</li>
+      <li>Continuous-improvement ledgers for regressions and capability gaps.</li>
+      <li>Subagent delegation with file outputs and parent verification.</li>
+    </ul>
+  </section>
+
+  <section id="target-citadel-os">
+    <h2>What Citadel OS is trying to become</h2>
+    <p>Citadel OS is broader than an agent stack. It is a life-wide operating system for a Bitcoin-focused founder running media, investments, nonprofit/Bitcoin, financial/legal, properties, family, health, and personal development.</p>
+    <div class="columns">
+      <div class="card"><h3>Layer 1 · Founder's Life OS</h3><p class="muted">Cross-domain rocks, capital allocation, Chief of Staff seat, domain oversight, replacement ladder.</p></div>
+      <div class="card"><h3>Layer 2 · Domain Execution</h3><p class="muted">Dan Martell-style rocks, scorecards, weekly rhythm, DRI model, SOPs/playbooks per domain.</p></div>
+    </div>
+  </section>
+
+  <section id="capability-matrix">
+    <h2>Capability matrix</h2>
+    <div class="matrix"><table>
+      <thead><tr><th>Capability</th><th>Foundry / Brit public model</th><th>Current OpenClaw stack</th><th>Target Citadel OS</th></tr></thead>
+      <tbody>
+        <tr><td>Identity</td><td>Strong templates and doctrine</td><td>Real production identity/persona files</td><td>Role-specific identities for Sene + future lane agents</td></tr>
+        <tr><td>Memory</td><td>Describes vector/Obsidian memory</td><td>Durable memory, logs, wiki, session recall</td><td>Unified memory across life domains + system of record</td></tr>
+        <tr><td>Skills</td><td>Strong schemas/examples</td><td>Large active skill stack, progressive disclosure</td><td>Domain skills tied to QA gates and team handoff</td></tr>
+        <tr><td>Tools</td><td>Tool specs, not live integrations</td><td>Real tools for browser/message/cron/nodes/etc.</td><td>Connected to Linear/CRM/calendar/KB/portfolio</td></tr>
+        <tr><td>Gates</td><td>Excellent doctrine; some scripts</td><td>Regression/SOP gates, but many still model-enforced</td><td>Runtime plumbing gates for send/write/source-of-truth</td></tr>
+        <tr><td>Specialists</td><td>Strong archetypes</td><td>Subagents exist; persistent org not fully built</td><td>Specialists only where queues/metrics justify them</td></tr>
+        <tr><td>Source intake</td><td>Calendar, Teams, email, calls, X, Confluence described</td><td>Some live lanes; Jessica/Anton visibility gaps remain</td><td>Read-only ingestion across team, portfolio, comms, calls</td></tr>
+        <tr><td>External writes</td><td>Read-only first; approval gates</td><td>Real sends/writes with recurring delivery regressions</td><td>External writes behind hard approval/egress controls</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="reality-check">
+    <h2>Reality check</h2>
+    <div class="grid">
+      <div class="card"><h3 class="status proven">Proven</h3><ul><li>Skills as scar tissue</li><li>Hard gates over prompt wishes</li><li>Specialists for bounded work</li><li>Sanitized self-serve repo model</li></ul></div>
+      <div class="card"><h3 class="status plausible">Plausible</h3><ul><li>Victor-style engineering loop</li><li>Call processor / briefer / writer lanes</li><li>Mechanic agent, if scoped and audited</li></ul></div>
+      <div class="card"><h3 class="status fragile">Fragile</h3><ul><li>Agent-to-agent handoff</li><li>External communication routing</li><li>Source integrations and auth</li><li>Context size and compaction</li></ul></div>
+    </div>
+    <div class="card danger"><h3 class="status aspirational">Aspirational</h3><p>Foundry as a deployable operating system; a fully autonomous specialist team; memory that “always has the right context.” Those require boring plumbing: source boundaries, delivery gates, auth, write approvals, rollback, queue ownership, health checks, and proof artifacts.</p></div>
+  </section>
+
+  <section id="workflow-comparison">
+    <h2>Workflow comparison</h2>
+    <div class="flow">
+      <div class="card"><h3>Foundry / Brit</h3><ol><li>Define principles</li><li>Add gates</li><li>Build skills</li><li>Define specialists</li><li>Specify tools</li><li>Feed memory/briefings</li><li>Publish sanitized patterns</li></ol></div>
+      <div class="card"><h3>Current OpenClaw</h3><ol><li>Brad asks</li><li>Sene retrieves context</li><li>Skill triggers</li><li>Tools execute</li><li>Subagents handle heavy work</li><li>Main verifies/files</li><li>Failures become regressions/SOPs</li></ol></div>
+      <div class="card"><h3>Target Citadel OS</h3><ol><li>Founder sets rocks</li><li>Domains run scorecards</li><li>Sene/CoS routes work</li><li>One system of record</li><li>Specialists process queues</li><li>Hard gates external writes</li><li>Lessons promote into system</li></ol></div>
+    </div>
+  </section>
+
+  <section id="openclaw-limitations">
+    <h2>OpenClaw limitations discovered in practice</h2>
+    <div class="columns">
+      <div class="card danger"><h3>Rules are not enforcement</h3><p class="muted">Repeated Telegram delivery/topic regressions prove that documented instructions are not enough. Foundry is right: critical controls need plumbing gates.</p></div>
+      <div class="card danger"><h3>Context blows up</h3><p class="muted">Long source-heavy work can overflow. Even this job's first large subagent attempt failed from context size. Progressive disclosure matters.</p></div>
+      <div class="card danger"><h3>Delivery is separate from work</h3><p class="muted">Writing a result is not the same as Brad receiving it. GitHub Pages and Telegram both require delivery verification.</p></div>
+      <div class="card danger"><h3>Auth is real work</h3><p class="muted">OAuth, 1Password, PATs, browser sessions, and credentials become operational bottlenecks.</p></div>
+      <div class="card danger"><h3>Subagents need strict DoD</h3><p class="muted">Without output paths and quality gates, delegation produces status theater or chat sludge.</p></div>
+      <div class="card danger"><h3>Source-of-truth drift</h3><p class="muted">Memory is useful but must not outrank current files, wikis, logs, and source systems.</p></div>
+    </div>
+  </section>
+
+  <section id="recommendations">
+    <h2>Recommended integration path</h2>
+    <div class="columns">
+      <div class="card good"><h3>Borrow</h3><ul><li>Hard vs reasoning gate taxonomy</li><li>Build manifest schema</li><li>Security egress test matrix</li><li>Skill landmines / fixture discipline</li><li>Victor's six-question design gate</li><li>Sanitized repo pattern</li></ul></div>
+      <div class="card danger"><h3>Avoid</h3><ul><li>Full Brit/Victor/Nora/Dex/Ivy/Greg org chart immediately</li><li>Treating public artifacts as implementation proof</li><li>More self-maintenance rituals before scorecards are live</li><li>Model-authored gates without deterministic tests</li></ul></div>
+    </div>
+    <div class="card blue"><h3>Test next</h3><ol><li>Create a Foundry-inspired OpenClaw gate pack: delivery, source-of-truth, context-size, external-send approval.</li><li>Run a Victor-style build manifest on one real OpenClaw improvement.</li><li>Build one specialist only: briefer or call processor.</li><li>Map Foundry schemas to our skill-building playbook.</li><li>Create a public-safe Citadel Ops pattern repo only after sanitization gates are mechanical.</li></ol></div>
+  </section>
+
+  <section id="sources">
+    <h2>Source notes / citations</h2>
+    <ul class="footer">
+      <li>Foundry README: <code>tmp/foundry-analysis/foundry/README.md</code></li>
+      <li>Building Brit guide: <code>tmp/foundry-analysis/foundry/field-guide/building-brit-field-guide.md</code></li>
+      <li>Foundry gates/skills/agents/tools/security READMEs under <code>tmp/foundry-analysis/foundry/</code></li>
+      <li>Citadel OS blueprint: <code>docs/projects/citadel-operations/citadel-os-blueprint-public.md</code></li>
+      <li>Skill-building playbook: <code>ops/playbooks/skill-building/skill-building-playbook.md</code></li>
+      <li>Delegation playbook: <code>ops/playbooks/delegation/delegation.md</code></li>
+      <li>Capability gaps: <code>ops/continuous-improvement/capability-gaps.md</code></li>
+      <li>Regressions: <code>ops/continuous-improvement/regressions.md</code></li>
+      <li>500-hour complexity note: <code>memory/2026-05-03-agent-memory-system.md</code></li>
+    </ul>
+  </section>
+</main>
+</body>
+</html>
