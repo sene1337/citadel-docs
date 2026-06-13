@@ -5,7 +5,7 @@
     <link>https://sene1337.github.io/citadel-docs/podcasts/deep-research/</link>
     <description>Deep research briefings and audio overviews for the Mills Citadel operating system.</description>
     <language>en-us</language>
-    <lastBuildDate>Sat, 13 Jun 2026 18:59:56 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 13 Jun 2026 19:07:50 GMT</lastBuildDate>
     <generator>Hermes Agent</generator>
     <itunes:author>Brad Mills / Hermes Agent</itunes:author>
     <itunes:summary>Deep research briefings and audio overviews for the Mills Citadel operating system.</itunes:summary>
@@ -13,12 +13,12 @@
     <itunes:type>episodic</itunes:type>
     <item>
       <title>Real AI Operating Systems Comparison</title>
-      <description>NotebookLM audio overview for Brad Mills on real AI operating systems: llm-wiki/G-Brain/Hypatia as the knowledge kernel, Google OKF as the interoperability layer, Obsidian/Claude as an optional operator surface, Block/OpenExO as organization design references, and Dan Martell as the adoption cadence.</description>
-      <itunes:summary>NotebookLM audio overview for Brad Mills on real AI operating systems: llm-wiki/G-Brain/Hypatia as the knowledge kernel, Google OKF as the interoperability layer, Obsidian/Claude as an optional operator surface, Block/OpenExO as organization design references, and Dan Martell as the adoption cadence.</itunes:summary>
+      <description>A NotebookLM audio overview generated from a curated 13-source full-text pack comparing real AI operating systems for Brad Mills: llm-wiki/G-Brain/Hypatia as the knowledge kernel, Google OKF as the interoperability layer, Obsidian/Claude as an optional operator surface, Block/OpenExO as organization design references, and Dan Martell as the adoption cadence for getting humans to use the system.</description>
+      <itunes:summary>A NotebookLM audio overview generated from a curated 13-source full-text pack comparing real AI operating systems for Brad Mills: llm-wiki/G-Brain/Hypatia as the knowledge kernel, Google OKF as the interoperability layer, Obsidian/Claude as an optional operator surface, Block/OpenExO as organization design references, and Dan Martell as the adoption cadence for getting humans to use the system.</itunes:summary>
       <pubDate>Sat, 13 Jun 2026 15:00:00 GMT</pubDate>
-      <guid isPermaLink="false">citadel-deep-research-ai-operating-systems-comparison-2026-06-13</guid>
-      <enclosure url="https://sene1337.github.io/citadel-docs/podcasts/deep-research/episodes/ai-operating-systems-comparison-2026-06-13.mp3" length="3003531" type="audio/mpeg" />
-      <itunes:duration>00:01:33</itunes:duration>
+      <guid isPermaLink="false">citadel-deep-research-ai-operating-systems-comparison-2026-06-13-focused</guid>
+      <enclosure url="https://sene1337.github.io/citadel-docs/podcasts/deep-research/episodes/ai-operating-systems-comparison-2026-06-13.mp3" length="39377247" type="audio/mpeg" />
+      <itunes:duration>00:20:23</itunes:duration>
       <itunes:episodeType>full</itunes:episodeType>
     </item>
   </channel>
