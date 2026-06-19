@@ -5,12 +5,22 @@
     <link>https://sene1337.github.io/citadel-docs/podcasts/deep-research/</link>
     <description>Deep research briefings and audio overviews for the Mills Citadel operating system.</description>
     <language>en-us</language>
-    <lastBuildDate>Sat, 13 Jun 2026 19:08:52 GMT</lastBuildDate>
+    <lastBuildDate>Fri, 19 Jun 2026 01:23:00 GMT</lastBuildDate>
     <generator>Hermes Agent</generator>
     <itunes:author>Brad Mills / Hermes Agent</itunes:author>
     <itunes:summary>Deep research briefings and audio overviews for the Mills Citadel operating system.</itunes:summary>
     <itunes:explicit>false</itunes:explicit>
     <itunes:type>episodic</itunes:type>
+    <item>
+      <title>Hermes Helper Agents in Telegram Rooms - Jessica EA Playbook</title>
+      <description>Light NotebookLM audio from a last30days signal scan plus official Hermes Telegram/team-assistant docs. Covers why Telegram group bots become messy, the privacy/admin gotchas, and the recommended dedicated Citadel EA Loop pattern for Brad and Jessica.</description>
+      <itunes:summary>Light NotebookLM audio from a last30days signal scan plus official Hermes Telegram/team-assistant docs. Covers why Telegram group bots become messy, the privacy/admin gotchas, and the recommended dedicated Citadel EA Loop pattern for Brad and Jessica.</itunes:summary>
+      <pubDate>Fri, 19 Jun 2026 01:23:00 GMT</pubDate>
+      <guid isPermaLink="false">citadel-deep-research-hermes-telegram-helper-agents-jessica-ea-playbook-2026-06-18</guid>
+      <enclosure url="https://sene1337.github.io/citadel-docs/podcasts/deep-research/episodes/hermes-telegram-helper-agents-jessica-ea-playbook-2026-06-18.mp3" length="73678728" type="audio/mpeg" />
+      <itunes:duration>00:38:09</itunes:duration>
+      <itunes:episodeType>full</itunes:episodeType>
+    </item>
     <item>
       <title>Real AI Operating Systems Comparison — Focused 13-Source Version</title>
       <description>NotebookLM audio generated from the curated 13-source full-text pack: Google OKF, NVK llm-wiki/G-Brain/Hypatia, Obsidian/Claude, Block, OpenExO, Dan Martell, and the Citadel OS synthesis. This is the cleaner workflow candidate.</description>
